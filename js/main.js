@@ -36,25 +36,25 @@ var createRandomValues = function (VALUES) {
 var createObjectCard = function () {
   return {
     author: {
-      avatar:'img/avatars/user0' + getRandomInt (1, 8) + '.png'
+      avatar: 'img/avatars/user0' + getRandomInt(1, 8) + '.png'
     },
     offer: {
-      title: TITLES[Math.floor(Math.random()*TITLES.length)],
-      address: getRandomInt (0, 800) + ', ' +  getRandomInt (0, 800),
-      price: getRandomInt (1000, 10000),
-      type: TYPES[Math.floor(Math.random()*TYPES.length)],
-      rooms: getRandomInt (1, 4),
-      guests: getRandomInt (1, 10),
-      checkin: CHECKINS[Math.floor(Math.random()*CHECKINS.length)],
-      checkout: CHECKOUTS[Math.floor(Math.random()*CHECKOUTS.length)],
+      title: TITLES[Math.floor(Math.random() * TITLES.length)],
+      address: getRandomInt(0, 800) + ', ' + getRandomInt(0, 800),
+      price: getRandomInt(1000, 10000),
+      type: TYPES[Math.floor(Math.random() * TYPES.length)],
+      rooms: getRandomInt(1, 4),
+      guests: getRandomInt(1, 10),
+      checkin: CHECKINS[Math.floor(Math.random() * CHECKINS.length)],
+      checkout: CHECKOUTS[Math.floor(Math.random() * CHECKOUTS.length)],
       features: createRandomValues(FEATURES),
-      description: DESCRIPTIONS[Math.floor(Math.random()*DESCRIPTIONS.length)],
+      description: DESCRIPTIONS[Math.floor(Math.random() * DESCRIPTIONS.length)],
       photos: createRandomValues(PHOTOS),
 
     },
     location: {
-      x: getRandomInt (0, 1200),
-      y: getRandomInt (130, 630)
+      x: getRandomInt(0, 1200),
+      y: getRandomInt(130, 630)
     }
   };
 };
@@ -67,7 +67,7 @@ var makeElement = function (tagName, className) {
 
 var createButton = function (resultObject) {
   var buttonItem = makeElement('button', 'map__pin');
-  buttonItem.style = 'left:' + (resultObject.location.x - PIN_WIDTH/2) + 'px; top:' + (resultObject.location.y - PIN_HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+  buttonItem.style = 'left:' + (resultObject.location.x - PIN_WIDTH / 2) + 'px; top:' + (resultObject.location.y - PIN_HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
   // ширина метки 62px, отнимаем половину, чтобы на место на карте метка указывала своим острым концом
 
   var picture = makeElement('img', 'advertisement__image');
