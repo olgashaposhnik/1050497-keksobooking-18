@@ -43,7 +43,7 @@ var getRandomValues = function (values) {
   return values[Math.floor(Math.random() * values.length)];
 };
 
-var createRandomValues = function (values, valuesQuantity) {
+var createRandomValues = function (values) {
   var valueNumbers = []; // создаем массив с номерами опций
   var valuesQuantity = getRandomInt(0, values.length); // сгенерировали количество опций
   for (var i = 0; i < valuesQuantity; i++) { // запускаем цикл с количеством итераций равным количеству запланированных опций
