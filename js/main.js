@@ -10,7 +10,6 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 var PIN_HEIGHT_BEFORE = 22;
 var pinParams = {
   WIDTH: document.querySelector('.map__pin').offsetWidth,
-  HEIGHT_BEFORE: 22,
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
 var screenParams = {
@@ -34,6 +33,14 @@ var guests = {
 var advertisementList = document.querySelector('.map__pins');
 var map = document.querySelector('.map');
 var advertisements = [];
+var adForm = document.querySelector('.ad-form');
+var adFormFieldset = adForm.querySelectorAll('fieldset');
+var mapFilters = document.querySelector('.map__filters');
+var mapPinMain = document.querySelector('.map__pin--main');
+var roomNumber = document.querySelector('#room_number');
+var capacity = document.querySelector('#capacity');
+var adress = document.querySelector('#address');
+console.log(adress); //удалить!!!!!!!!!!!!!!
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -93,7 +100,7 @@ var makeElement = function (tagName, className) {
 
 var createButton = function (resultObject) {
   var buttonItem = makeElement('button', 'map__pin');
-  buttonItem.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+  buttonItem.style = 'left:' + (resultObject.location.x + pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y + pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
   // ширина метки 62px, отнимаем половину, чтобы на место на карте метка указывала своим острым концом
 
   var picture = makeElement('img', 'advertisement__image');
@@ -103,17 +110,61 @@ var createButton = function (resultObject) {
   return buttonItem;
 };
 
-for (i = 0; i < TITLES.length; i++) {
-  advertisements[i] = createObjectCard();
-}
+for (var i = 0; i < adFormFieldset.length; i++) {
+  adFormFieldset[i].classList.add('disabled'); //Добавляем класс disabled полям adFormFieldset
+};
+mapFilters.classList.add('disabled'); //Добавляем класс disabled полям mapFilters
 
-// Удаляем у блока .map класс .map--faded
-map.classList.remove('map--faded');
+var classRemove = function (element, className) {
+  element.classList.remove(className);
+};
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < advertisements.length; i++) {
-  var advertisementItem = createButton(advertisements[i]);
-  fragment.appendChild(advertisementItem);
-}
+adress.value = Math.floor((parseInt(mapPinMain.style.left, 10) + pinParams.WIDTH / 2)) + ', ' + Math.floor((parseInt(mapPinMain.style.top, 10) + (pinParams.HEIGHT - PIN_HEIGHT_BEFORE) / 2));
 
-advertisementList.appendChild(fragment);
+var onMapPinMainClick = function() {
+  // Удаляем у блока .map класс .map--faded
+  classRemove (map, 'map--faded');
+  classRemove (adForm, 'ad-form--disabled');
+  for (var i = 0; i < adFormFieldset.length; i++) {
+    classRemove (adFormFieldset[i], 'disabled');
+  };
+  classRemove (mapFilters, 'disabled');
+  adress.value = Math.floor((parseInt(mapPinMain.style.left, 10) + pinParams.WIDTH / 2)) + ', ' + Math.floor((parseInt(mapPinMain.style.top, 10) + pinParams.HEIGHT));
+};
+
+mapPinMain.addEventListener('mousedown', onMapPinMainClick);
+
+mapPinMain.addEventListener('keydown', function() { // переводим страницу в активный режим при нажатии на энтер
+  if (evt.keyCode === 13) {
+    onMapPinMainClick ();
+  }
+});
+
+roomNumber.addEventListener('change', function (evt) { // Устанавливаем соответствие количества комнат количеству гостей
+
+  if (roomNumber.options[0].selected = "selected") {
+    capacity.options[0].disabled = "disabled";
+    capacity.options[1].disabled = "disabled";
+    capacity.options[3].disabled = "disabled";
+  } else if (roomNumber.value === 2) {
+    capacity.options[0].disabled = "disabled";
+    capacity.options[3].disabled = "disabled";
+  } else if (roomNumber.value === 3) {
+    capacity.options[3].disabled = "disabled";
+  } else {
+    capacity.options[0].disabled = "disabled";
+    capacity.options[1].disabled = "disabled";
+    capacity.options[2].disabled = "disabled";
+  }
+});
+
+console.log(roomNumber);
+console.log(capacity.value="0");
+console.dir(capacity);
+
+/*Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, что при выборе
+количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
+1 комната — «для 1 гостя»;
+2 комнаты — «для 2 гостей» или «для 1 гостя»;
+3 комнаты — «для 3 гостей», «для 2 гостей» или «для 1 гостя»;
+100 комнат — «не для гостей».*/
