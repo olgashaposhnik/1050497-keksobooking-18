@@ -1,4 +1,5 @@
 'use strict';
+/*
 var AVATARS_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8];
 var TITLES = ['квартира в Токио', 'аппартаменты Москва', 'Комната в Париже', '3-х комнатная квартира в Риге', 'комната в Санкт-Петербурге', 'домик в Севастополе', 'квартира в Донецке', 'аппартаменты в Берлине'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
@@ -7,11 +8,13 @@ var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var DESCRIPTIONS = ['описание 1', 'описание 2', 'описание 3', 'описание 4', 'описание 5', 'описание 6', 'описание 7', 'описание 8'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+*/
 var PIN_HEIGHT_BEFORE = 22;
 var pinParams = {
   WIDTH: document.querySelector('.map__pin').offsetWidth,
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
+/*
 var screenParams = {
   MIN_WIDTH: 0,
   MAX_WIDTH: document.querySelector('.map').offsetWidth,
@@ -29,10 +32,8 @@ var rooms = {
 var guests = {
   MIN: 1,
   MAX: 10
-};
-var advertisementList = document.querySelector('.map__pins');
+};*/
 var map = document.querySelector('.map');
-var advertisements = [];
 var adForm = document.querySelector('.ad-form');
 var adFormFieldset = adForm.querySelectorAll('fieldset');
 var mapFilters = document.querySelector('.map__filters');
@@ -40,8 +41,14 @@ var mapPinMain = document.querySelector('.map__pin--main');
 var roomNumber = document.querySelector('#room_number');
 var capacity = document.querySelector('#capacity');
 var adress = document.querySelector('#address');
-console.log(adress); //удалить!!!!!!!!!!!!!!
-
+var ENTER_KEYCODE = 13;
+var capacityOptionsObj = {
+  '1': ['0', '2', '3'],
+  '2': ['0', '3'],
+  '3': ['0'],
+  '100': ['1', '2', '3']
+};
+/*
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
@@ -65,8 +72,9 @@ var createRandomValues = function (values) {
   }
   // Возвращаем созданный массив
   return valueNumbers;
-};
+};*/
 
+/*
 var createObjectCard = function () {
   return {
     author: {
@@ -96,8 +104,9 @@ var makeElement = function (tagName, className) {
   var element = document.createElement(tagName);
   element.classList.add(className);
   return element;
-};
+};*/
 
+/*
 var createButton = function (resultObject) {
   var buttonItem = makeElement('button', 'map__pin');
   buttonItem.style = 'left:' + (resultObject.location.x + pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y + pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
@@ -108,12 +117,12 @@ var createButton = function (resultObject) {
   picture.alt = resultObject.offer.title;
   buttonItem.appendChild(picture);
   return buttonItem;
-};
+};*/
 
 for (var i = 0; i < adFormFieldset.length; i++) {
-  adFormFieldset[i].classList.add('disabled'); //Добавляем класс disabled полям adFormFieldset
-};
-mapFilters.classList.add('disabled'); //Добавляем класс disabled полям mapFilters
+  adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
+}
+mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
 
 var classRemove = function (element, className) {
   element.classList.remove(className);
@@ -121,48 +130,38 @@ var classRemove = function (element, className) {
 
 adress.value = Math.floor((parseInt(mapPinMain.style.left, 10) + pinParams.WIDTH / 2)) + ', ' + Math.floor((parseInt(mapPinMain.style.top, 10) + (pinParams.HEIGHT - PIN_HEIGHT_BEFORE) / 2));
 
-var onMapPinMainClick = function() {
+var onMapPinMainClick = function () {
   // Удаляем у блока .map класс .map--faded
-  classRemove (map, 'map--faded');
-  classRemove (adForm, 'ad-form--disabled');
-  for (var i = 0; i < adFormFieldset.length; i++) {
-    classRemove (adFormFieldset[i], 'disabled');
-  };
-  classRemove (mapFilters, 'disabled');
+  classRemove(map, 'map--faded');
+  classRemove(adForm, 'ad-form--disabled');
+  for (var j = 0; j < adFormFieldset.length; j++) {
+    classRemove(adFormFieldset[j], 'disabled');
+  }
+  classRemove(mapFilters, 'disabled');
   adress.value = Math.floor((parseInt(mapPinMain.style.left, 10) + pinParams.WIDTH / 2)) + ', ' + Math.floor((parseInt(mapPinMain.style.top, 10) + pinParams.HEIGHT));
 };
 
 mapPinMain.addEventListener('mousedown', onMapPinMainClick);
 
-mapPinMain.addEventListener('keydown', function() { // переводим страницу в активный режим при нажатии на энтер
-  if (evt.keyCode === 13) {
-    onMapPinMainClick ();
+mapPinMain.addEventListener('keydown', function (evt) { // переводим страницу в активный режим при нажатии на энтер
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onMapPinMainClick();
   }
 });
 
 roomNumber.addEventListener('change', function (evt) { // Устанавливаем соответствие количества комнат количеству гостей
-
-  if (roomNumber.options[0].selected = "selected") {
-    capacity.options[0].disabled = "disabled";
-    capacity.options[1].disabled = "disabled";
-    capacity.options[3].disabled = "disabled";
-  } else if (roomNumber.value === 2) {
-    capacity.options[0].disabled = "disabled";
-    capacity.options[3].disabled = "disabled";
-  } else if (roomNumber.value === 3) {
-    capacity.options[3].disabled = "disabled";
-  } else {
-    capacity.options[0].disabled = "disabled";
-    capacity.options[1].disabled = "disabled";
-    capacity.options[2].disabled = "disabled";
+  var key = evt.currentTarget.value; // cледим за выбранным количеством комнат
+  var disabledOptions = capacityOptionsObj[key]; // disabledOptions - value из capacity
+  for (var k = 0; k < capacity.options.length; k++) {
+    if (disabledOptions.includes(capacity.options[k].value)) {
+      capacity.options[k].disabled = true;
+    } else {
+      capacity.options[k].disabled = false;
+    }
   }
 });
 
-console.log(roomNumber);
-console.log(capacity.value="0");
-console.dir(capacity);
-
-/*Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, что при выборе
+/* Поле «Количество комнат» синхронизировано с полем «Количество мест» таким образом, что при выборе
 количества комнат вводятся ограничения на допустимые варианты выбора количества гостей:
 1 комната — «для 1 гостя»;
 2 комнаты — «для 2 гостей» или «для 1 гостя»;
