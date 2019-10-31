@@ -124,18 +124,6 @@ var classRemove = function (element, className) {
   element.classList.remove(className);
 };
 
-/*
-var fragment = document.createDocumentFragment();
-
-for (var a = 0; a < TITLES.length; a++) {
-  advertisements[a] = createObjectCard(a);
-};
-
-for (var m = 0; m < advertisements.length; m++) {
-  var advertisementItem = createButton(advertisements[m]);
-  fragment.appendChild(advertisementItem);
-};*/
-
 var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
   for (var m = 0; m < mapFiltersSelect.length; m++) {
     mapFiltersSelect[m].setAttribute('disabled', 'disabled');
