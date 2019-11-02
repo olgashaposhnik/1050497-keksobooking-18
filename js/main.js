@@ -32,6 +32,7 @@ var guests = {
   MAX: 10
 };
 var advertisementList = document.querySelector('.map__pins');
+var mapPinTemplate = document.querySelector('#pin');
 var map = document.querySelector('.map');
 var adForm = document.querySelector('.ad-form');
 var adFormFieldset = adForm.querySelectorAll('fieldset');
@@ -110,14 +111,11 @@ var makeElement = function (tagName, className) {
   return element;
 };
 
-var createButton = function (resultObject) {
-  var buttonItem = makeElement('button', 'map__pin');
-  buttonItem.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
-  // ширина метки 62px, отнимаем половину, чтобы на место на карте метка указывала своим острым концом
-  var picture = makeElement('img', 'advertisement__image');
-  picture.src = resultObject.author.avatar;
-  picture.alt = resultObject.offer.title;
-  buttonItem.appendChild(picture);
+var createButton = function (resultObject) { // клонирует пины из template
+  var buttonItem = mapPinTemplate.content.cloneNode(true);
+  buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+  buttonItem.querySelector('img').src = resultObject.author.avatar;
+  buttonItem.querySelector('img').alt = resultObject.offer.title;
   return buttonItem;
 };
 
