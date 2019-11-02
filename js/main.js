@@ -12,9 +12,10 @@ var pinParams = {
   WIDTH: document.querySelector('.map__pin').offsetWidth,
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
+var screenIndent = 70;
 var screenParams = {
   MIN_WIDTH: 70,
-  MAX_WIDTH: document.querySelector('.map').offsetWidth - MIN_WIDTH,
+  MAX_WIDTH: document.querySelector('.map').offsetWidth - screenIndent,
   MIN_HEIGHT: 130,
   MAX_HEIGHT: 630,
 };
