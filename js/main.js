@@ -13,8 +13,8 @@ var pinParams = {
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
 var screenParams = {
-  MIN_WIDTH: 0,
-  MAX_WIDTH: document.querySelector('.map').offsetWidth,
+  MIN_WIDTH: 70,
+  MAX_WIDTH: document.querySelector('.map').offsetWidth - 70,
   MIN_HEIGHT: 130,
   MAX_HEIGHT: 630,
 };
@@ -170,8 +170,8 @@ mapPinMain.addEventListener('keydown', function (evt) { // переводим с
   }
 });
 
-roomNumber.addEventListener('change', function (evt) { // Устанавливаем соответствие количества комнат количеству гостей
-  var key = evt.currentTarget.value; // cледим за выбранным количеством комнат
+var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
+  var key = roomNumber.value; // cледим за выбранным количеством комнат
   var disabledOptions = capacityOptionsObj[key]; // disabledOptions - value из capacity
   for (var k = 0; k < capacity.options.length; k++) {
     if (disabledOptions.includes(capacity.options[k].value)) {
@@ -180,4 +180,7 @@ roomNumber.addEventListener('change', function (evt) { // Устанавлива
       capacity.options[k].disabled = false;
     }
   }
-});
+};
+
+roomNumber.addEventListener('change', onNumberSelectChange); // Устанавливаем соответствие количества комнат количеству гостей
+onNumberSelectChange();
