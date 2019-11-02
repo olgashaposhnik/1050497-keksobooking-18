@@ -14,7 +14,7 @@ var pinParams = {
 };
 var screenParams = {
   MIN_WIDTH: 70,
-  MAX_WIDTH: document.querySelector('.map').offsetWidth - 70,
+  MAX_WIDTH: document.querySelector('.map').offsetWidth - MIN_WIDTH,
   MIN_HEIGHT: 130,
   MAX_HEIGHT: 630,
 };
