@@ -10,12 +10,12 @@ var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.g
 var PIN_HEIGHT_BEFORE = 22;
 var pinParams = {
   WIDTH: document.querySelector('.map__pin').offsetWidth,
-  HEIGHT_BEFORE: 22,
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
+var screenIndent = 70;
 var screenParams = {
-  MIN_WIDTH: 0,
-  MAX_WIDTH: document.querySelector('.map').offsetWidth,
+  MIN_WIDTH: 70,
+  MAX_WIDTH: document.querySelector('.map').offsetWidth - screenIndent,
   MIN_HEIGHT: 130,
   MAX_HEIGHT: 630,
 };
@@ -32,8 +32,24 @@ var guests = {
   MAX: 10
 };
 var advertisementList = document.querySelector('.map__pins');
+var mapPinTemplate = document.querySelector('#pin');
 var map = document.querySelector('.map');
+var adForm = document.querySelector('.ad-form');
+var adFormFieldset = adForm.querySelectorAll('fieldset');
+var mapFilters = document.querySelector('.map__filters');
+var mapFiltersSelect = mapFilters.querySelectorAll('select');
+var mapPinMain = document.querySelector('.map__pin--main');
+var roomNumber = document.querySelector('#room_number');
+var capacity = document.querySelector('#capacity');
+var adress = document.querySelector('#address');
 var advertisements = [];
+var ENTER_KEYCODE = 13;
+var capacityOptionsObj = {
+  '1': ['0', '2', '3'],
+  '2': ['0', '3'],
+  '3': ['0'],
+  '100': ['1', '2', '3']
+};
 
 var getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -41,6 +57,10 @@ var getRandomInt = function (min, max) {
 
 var getRandomValues = function (values) {
   return values[Math.floor(Math.random() * values.length)];
+};
+
+var getIntegerAdress = function (value, param) {
+  return Math.floor((parseInt(value, 10) + param / 2));
 };
 
 var createRandomValues = function (values) {
@@ -60,7 +80,7 @@ var createRandomValues = function (values) {
   return valueNumbers;
 };
 
-var createObjectCard = function () {
+var createObjectCard = function (i) {
   return {
     author: {
       avatar: 'img/avatars/user0' + AVATARS_NUMBERS[i] + '.png'
@@ -85,35 +105,75 @@ var createObjectCard = function () {
   };
 };
 
-var makeElement = function (tagName, className) {
-  var element = document.createElement(tagName);
-  element.classList.add(className);
-  return element;
-};
-
-var createButton = function (resultObject) {
-  var buttonItem = makeElement('button', 'map__pin');
-  buttonItem.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
-  // ширина метки 62px, отнимаем половину, чтобы на место на карте метка указывала своим острым концом
-
-  var picture = makeElement('img', 'advertisement__image');
-  picture.src = resultObject.author.avatar;
-  picture.alt = resultObject.offer.title;
-  buttonItem.appendChild(picture);
+var createButton = function (resultObject) { // клонирует пины из template
+  var buttonItem = mapPinTemplate.content.cloneNode(true);
+  buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+  buttonItem.querySelector('img').src = resultObject.author.avatar;
+  buttonItem.querySelector('img').alt = resultObject.offer.title;
   return buttonItem;
 };
 
-for (i = 0; i < TITLES.length; i++) {
-  advertisements[i] = createObjectCard();
+var classRemove = function (element, className) {
+  element.classList.remove(className);
+};
+
+var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
+  for (var m = 0; m < mapFiltersSelect.length; m++) {
+    mapFiltersSelect[m].setAttribute('disabled', 'disabled');
+  }
+};
+
+mapFiltersSelectDisabled();
+
+var onMapPinMainClick = function () {
+  // Удаляем у блока .map класс .map--faded
+  classRemove(map, 'map--faded');
+  classRemove(adForm, 'ad-form--disabled');
+  for (var j = 0; j < adFormFieldset.length; j++) {
+    classRemove(adFormFieldset[j], 'disabled');
+  }
+  for (var l = 0; l < mapFiltersSelect.length; l++) {
+    mapFiltersSelect[l].removeAttribute('disabled');
+  }
+  for (var a = 0; a < TITLES.length; a++) {
+    advertisements[a] = createObjectCard(a);
+  }
+  var fragment = document.createDocumentFragment();
+  for (var m = 0; m < advertisements.length; m++) {
+    var advertisementItem = createButton(advertisements[m]);
+    fragment.appendChild(advertisementItem);
+  }
+  advertisementList.appendChild(fragment);
+  adress.value = getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + getIntegerAdress(mapPinMain.style.top, pinParams.HEIGHT * 2);
+};
+
+for (var i = 0; i < adFormFieldset.length; i++) {
+  adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
 }
 
-// Удаляем у блока .map класс .map--faded
-map.classList.remove('map--faded');
+adress.value = getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + getIntegerAdress(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
 
-var fragment = document.createDocumentFragment();
-for (var i = 0; i < advertisements.length; i++) {
-  var advertisementItem = createButton(advertisements[i]);
-  fragment.appendChild(advertisementItem);
-}
+mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
 
-advertisementList.appendChild(fragment);
+mapPinMain.addEventListener('mousedown', onMapPinMainClick);
+
+mapPinMain.addEventListener('keydown', function (evt) { // переводим страницу в активный режим при нажатии на энтер
+  if (evt.keyCode === ENTER_KEYCODE) {
+    onMapPinMainClick();
+  }
+});
+
+var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
+  var key = roomNumber.value; // cледим за выбранным количеством комнат
+  var disabledOptions = capacityOptionsObj[key]; // disabledOptions - value из capacity
+  for (var k = 0; k < capacity.options.length; k++) {
+    if (disabledOptions.includes(capacity.options[k].value)) {
+      capacity.options[k].disabled = true;
+    } else {
+      capacity.options[k].disabled = false;
+    }
+  }
+};
+
+roomNumber.addEventListener('change', onNumberSelectChange); // Устанавливаем соответствие количества комнат количеству гостей
+onNumberSelectChange();
