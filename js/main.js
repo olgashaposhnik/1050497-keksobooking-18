@@ -105,12 +105,6 @@ var createObjectCard = function (i) {
   };
 };
 
-var makeElement = function (tagName, className) {
-  var element = document.createElement(tagName);
-  element.classList.add(className);
-  return element;
-};
-
 var createButton = function (resultObject) { // клонирует пины из template
   var buttonItem = mapPinTemplate.content.cloneNode(true);
   buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
