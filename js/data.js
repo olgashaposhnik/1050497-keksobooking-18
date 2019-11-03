@@ -7,7 +7,6 @@ var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
 var DESCRIPTIONS = ['описание 1', 'описание 2', 'описание 3', 'описание 4', 'описание 5', 'описание 6', 'описание 7', 'описание 8'];
 var PHOTOS = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
-var PIN_HEIGHT_BEFORE = 22;
 var screenIndent = 70;
 var screenParams = {
   MIN_WIDTH: 70,
@@ -36,6 +35,10 @@ var getRandomValues = function (values) {
   return values[Math.floor(Math.random() * values.length)];
 };
 
+window.getIntegerAdress = function (value, param) {
+  return Math.floor((parseInt(value, 10) + param / 2));
+};
+
 var createRandomValues = function (values) {
   var valueNumbers = []; // создаем массив с номерами опций
   var valuesQuantity = getRandomInt(0, values.length); // сгенерировали количество опций
@@ -53,7 +56,7 @@ var createRandomValues = function (values) {
   return valueNumbers;
 };
 
-var createObjectCard = function (i) {
+window.createObjectCard = function (i) {
   return {
     author: {
       avatar: 'img/avatars/user0' + AVATARS_NUMBERS[i] + '.png'

@@ -17,10 +17,6 @@ var pinParams = {
   HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
 };
 
-var getIntegerAdress = function (value, param) {
-  return Math.floor((parseInt(value, 10) + param / 2));
-};
-
 var createButton = function (resultObject) { // клонирует пины из template
   var buttonItem = mapPinTemplate.content.cloneNode(true);
   buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
@@ -52,7 +48,7 @@ var onMapPinMainClick = function () {
     mapFiltersSelect[l].removeAttribute('disabled');
   }
   for (var a = 0; a < TITLES.length; a++) {
-    advertisements[a] = createObjectCard(a);
+    advertisements[a] = window.createObjectCard(a);
   }
   var fragment = document.createDocumentFragment();
   for (var m = 0; m < advertisements.length; m++) {
@@ -60,14 +56,14 @@ var onMapPinMainClick = function () {
     fragment.appendChild(advertisementItem);
   }
   advertisementList.appendChild(fragment);
-  adress.value = getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + getIntegerAdress(mapPinMain.style.top, pinParams.HEIGHT * 2);
+  adress.value = window.getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.getIntegerAdress(mapPinMain.style.top, pinParams.HEIGHT * 2);
 };
 
 for (var i = 0; i < adFormFieldset.length; i++) {
   adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
 }
 
-adress.value = getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + getIntegerAdress(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+adress.value = window.getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.getIntegerAdress(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
 
 mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
 
