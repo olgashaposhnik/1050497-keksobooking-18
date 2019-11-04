@@ -2,6 +2,12 @@
 var AVATARS_NUMBERS = [1, 2, 3, 4, 5, 6, 7, 8];
 var TITLES = ['квартира в Токио', 'аппартаменты Москва', 'Комната в Париже', '3-х комнатная квартира в Риге', 'комната в Санкт-Петербурге', 'домик в Севастополе', 'квартира в Донецке', 'аппартаменты в Берлине'];
 var TYPES = ['palace', 'flat', 'house', 'bungalo'];
+var typesKey = {
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalo: 'Бунгало'
+};
 var CHECKINS = ['12:00', '13:00', '14:00'];
 var CHECKOUTS = ['12:00', '13:00', '14:00'];
 var FEATURES = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
@@ -79,4 +85,24 @@ window.createObjectCard = function (i) {
       y: getRandomInt(screenParams.MIN_HEIGHT, screenParams.MAX_HEIGHT),
     }
   };
+};
+
+var createFeatureFragment = function (resultObject) {
+  var featureFragment = document.createDocumentFragment();
+  for (var j = 0; j < adData.offer.features.length; j++) {
+    var featureItem = document.createElement('li');
+    featureItem.className = 'popup__feature popup__feature--' + adData.offer.features[j];
+    featureFragment.appendChild(featureItem);
+  }
+  return featureFragment;
+};
+
+var createPhotosFragment = function (resultObject) {
+  var photosFragment = document.createDocumentFragment();
+  for (var t = 0; t < adData.offer.photos.length; t++) {
+    var popupPhotoItem = popupPhoto.cloneNode(true);
+    popupPhotoItem.src = adData.offer.photos[t];
+    photosFragment.appendChild(popupPhotoItem);
+  }
+  return photosFragment;
 };
