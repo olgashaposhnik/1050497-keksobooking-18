@@ -16,9 +16,7 @@ var capacityOptionsTrue = {
 
 var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
   var key = roomNumber.value; // cледим за выбранным количеством комнат
-  var capacitySelected = capacity.value;
   var disabledOptions = capacityOptionsObj[key]; // disabledOptions - value из capacity
-  var selectedOptions = capacityOptionsTrue[key];
   for (var k = 0; k < capacity.options.length; k++) {
     if (disabledOptions.includes(capacity.options[k].value)) {
       capacity.options[k].disabled = true;
@@ -26,13 +24,14 @@ var onNumberSelectChange = function () { // Устанавливаем соот�
       capacity.options[k].disabled = false;
     }
   }
-    for (var i = 0; i < capacity.options.length; i++)
-  if (capacity.options[i].selected = true) {
-    for (var j = 0; j < capacity.options.length; j++) {
-      if (disabledOptions.includes(capacity.options[j].value)) {
-        capacity.options[j].selected = selectedOptions[1];
+  if (disabledOptions.includes(capacity.selectedOptions[0].value)) {
+    [].forEach.call(capacity.options, function(option) {
+      if (option.value === capacityOptionsTrue[key][0]) {
+        option.selected = true;
+      } else {
+        option.selected = false;
       }
-    }
+    });
   }
 };
 
