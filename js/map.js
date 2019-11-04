@@ -53,13 +53,7 @@ var onMapPinMainClick = function () {
   var fragment = document.createDocumentFragment();
   for (var m = 0; m < advertisements.length; m++) {
     var advertisementItem = createButton(advertisements[m]);
-    var advertisementCard = window.createCard(advertisements[m]);
     fragment.appendChild(advertisementItem);
-    advertisementCard.before('.map__filters-container');
-  }
-  for (var k = 0; k < advertisements.length; k++) {
-    var advertisementCard = window.createCard(advertisements[k]);
-    advertisementCard.before('.map__filters-container');
   }
   advertisementList.appendChild(fragment);
   adress.value = window.getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.getIntegerAdress(mapPinMain.style.top, pinParams.HEIGHT * 2);

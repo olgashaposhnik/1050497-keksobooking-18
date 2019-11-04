@@ -12,7 +12,7 @@ var typesKey = {
 };
 var mapPinTemplate = document.querySelector('#pin');
 var cardTemplate = document.querySelector('#card');
-var popupPhoto = cardTemplate.querySelector('.popup__photo');
+var popupPhoto = cardTemplate.content.querySelector('.popup__photo');
 
 window.createButton = function (resultObject) { // клонирует пины из template
   var buttonItem = mapPinTemplate.content.cloneNode(true);
@@ -35,7 +35,7 @@ var createFeatureFragment = function (resultObject) {
 var createPhotosFragment = function (resultObject) {
   var photosFragment = document.createDocumentFragment();
   for (var j = 0; j < resultObject.offer.photos.length; j++) {
-    var popupPhotoItem = popupPhoto.content.cloneNode(true);
+    var popupPhotoItem = popupPhoto.cloneNode(true);
     popupPhotoItem.src = resultObject.offer.photos[j];
     photosFragment.appendChild(popupPhotoItem);
   }
@@ -44,6 +44,7 @@ var createPhotosFragment = function (resultObject) {
 
 window.createCard = function (resultObject) { // клонирует пины из card
   var cardItem = cardTemplate.content.cloneNode(true);
+  console.log(cardItem)
   cardItem.querySelector('.popup__title').textContent = resultObject.offer.title;
   cardItem.querySelector('.popup__text--address').textContent = resultObject.offer.address;
   cardItem.querySelector('.popup__text--price').textContent = resultObject.offer.price + '₽/ночь';
@@ -58,3 +59,8 @@ window.createCard = function (resultObject) { // клонирует пины и�
   cardItem.querySelector('.popup__avatar').src = resultObject.author.avatar;
   return cardItem;
 };
+
+for (var i = 0; i < advertisements.length; i++) {
+  var advertisementCard = createCard(advertisements[i]);
+  advertisementCard.before('.map__filters-container');
+}
