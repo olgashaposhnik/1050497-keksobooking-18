@@ -8,6 +8,7 @@ var adFormFieldset = adForm.querySelectorAll('fieldset');
 var mapFilters = document.querySelector('.map__filters');
 var mapFiltersSelect = mapFilters.querySelectorAll('select');
 var mapPinMain = document.querySelector('.map__pin--main');
+var mapFiltersContainer = document.querySelector('.map__filters-container');
 var adress = document.querySelector('#address');
 var advertisements = [];
 var ENTER_KEYCODE = 13;
@@ -53,7 +54,9 @@ var onMapPinMainClick = function () {
   var fragment = document.createDocumentFragment();
   for (var m = 0; m < advertisements.length; m++) {
     var advertisementItem = createButton(advertisements[m]);
+    var advertisementCard = window.createCard(advertisements[m]);
     fragment.appendChild(advertisementItem);
+    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
   }
   advertisementList.appendChild(fragment);
   adress.value = window.getIntegerAdress(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.getIntegerAdress(mapPinMain.style.top, pinParams.HEIGHT * 2);
