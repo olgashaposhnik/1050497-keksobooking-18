@@ -25,7 +25,7 @@ var onNumberSelectChange = function () { // Устанавливаем соот�
     }
   }
   if (disabledOptions.includes(capacity.selectedOptions[0].value)) {
-    [].forEach.call(capacity.options, function(option) {
+    [].forEach.call(capacity.options, function (option) {
       if (option.value === capacityOptionsTrue[key][0]) {
         option.selected = true;
       } else {
