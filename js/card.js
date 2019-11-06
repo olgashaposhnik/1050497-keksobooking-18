@@ -38,10 +38,10 @@
       cardItem.querySelector('.popup__text--capacity').textContent = resultObject.offer.rooms + ' комнаты для ' + resultObject.offer.guests + ' гостей';
       cardItem.querySelector('.popup__text--time').textContent = 'Заезд после ' + resultObject.offer.checkin + ', выезд до ' + resultObject.offer.checkout;
       cardItem.querySelector('.popup__features').innerHTML = '';
-      cardItem.querySelector('.popup__features').appendChild(window.pin.createFeatureFragment(resultObject));
+      cardItem.querySelector('.popup__features').appendChild(window.card.createFeatureFragment(resultObject));
       cardItem.querySelector('.popup__description').textContent = resultObject.offer.description;
       cardItem.querySelector('.popup__photos').removeChild(cardItem.querySelector('.popup__photo'));
-      cardItem.querySelector('.popup__photos').appendChild(window.pin.createPhotosFragment(resultObject));
+      cardItem.querySelector('.popup__photos').appendChild(window.card.createPhotosFragment(resultObject));
       cardItem.querySelector('.popup__avatar').src = resultObject.author.avatar;
       return cardItem.firstElementChild;
     }
