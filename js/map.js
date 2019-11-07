@@ -16,17 +16,40 @@
   window.advertisements = advertisements;
   var ENTER_KEYCODE = 13;
   var PIN_HEIGHT_BEFORE = 22;
+  var screenIndent = 70;
+  var screenParams = {
+    MIN_WIDTH: 70,
+    MAX_WIDTH: document.querySelector('.map').offsetWidth - screenIndent,
+    MIN_HEIGHT: 130,
+    MAX_HEIGHT: 630,
+  };
   var pinParams = {
     WIDTH: document.querySelector('.map__pin').offsetWidth,
     HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
   };
 
+  var mapCard = function () {
+    return document.querySelector('.map_card');
+  };
+
+  var onButtonPinClick = function(evt) { // odl
+    var optionsObject = evt.currentTarget._options; // odl
+    var advertisementCard = window.card.createCard(optionsObject); // odl
+    if (mapCard()) {
+      mapCard().remove();
+    };
+    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
+  };
+
   window.map = {
     createButton: function (resultObject) { // клонирует пины из template
       var buttonItem = mapPinTemplate.content.cloneNode(true);
-      buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+      var mapPin = buttonItem.querySelector('.map__pin');
+      mapPin.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
       buttonItem.querySelector('img').src = resultObject.author.avatar;
       buttonItem.querySelector('img').alt = resultObject.offer.title;
+      mapPin._options = resultObject; // odl
+      mapPin.addEventListener('click', onButtonPinClick); // odl
       return buttonItem;
     },
     classRemove: function (element, className) {
@@ -49,9 +72,6 @@
       for (var m = 0; m < advertisements.length; m++) {
         var advertisementItem = window.map.createButton(advertisements[m]);
         fragment.appendChild(advertisementItem);
-        var advertisementCard = window.card.createCard(advertisements[m]);
-        mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
-        advertisementCard.dataOptions = window.advertisements[m];
       }
       advertisementList.appendChild(fragment);
       adress.value = window.data.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.data.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
@@ -65,4 +85,57 @@
       window.map.onMapPinMainClick();
     }
   });
+
+  /*
+  mapPinMain.addEventListener('mousedown', function (evt) {
+    moveEvt.preventDefault();
+    var startCoords = {
+      x: evt.clientX,
+      y: evt.clientY
+    };
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+    var mapPinMainPosition = {
+      x: mapPinMain.offsetLeft - shift.x,
+      y: mapPinMain.offsetTop - shift.y
+    };
+    var moveLimit = {
+      LEFT: screenParams.MIN_WIDTH,
+      TOP: screenParams.MAX_HEIGHT - pinParams.HEIGHT,
+      RIGHT: screenParams.MAX_WIDTH - pinParams.WIDTH,
+      BOTTOM: DragLimit.Y.MAX - mapPinMain.offsetHeight - TAIL_HEIGHT
+    };
+
+
+
+    moveEvt.preventDefault();
+
+
+    var Border = {
+      TOP: DragLimit.Y.MIN - mapPinMain.offsetHeight - TAIL_HEIGHT,
+      BOTTOM: DragLimit.Y.MAX - mapPinMain.offsetHeight - TAIL_HEIGHT,
+      LEFT: DragLimit.X.MIN,
+      RIGHT: DragLimit.X.MAX - mapPinMain.offsetWidth
+    };
+    if (mapPinMainPosition.x >= Border.LEFT && mapPinMainPosition.x <= Border.RIGHT) {
+      mapPinMain.style.left = mapPinMainPosition.x + 'px';
+    }
+    if (mapPinMainPosition.y >= Border.TOP && mapPinMainPosition.y <= Border.BOTTOM) {
+      mapPinMain.style.top = mapPinMainPosition.y + 'px';
+    }
+    var pinTailCoords = {
+      x: mapPinMainPosition.x + Math.ceil(PinSize.WIDTH / 2),
+      y: mapPinMainPosition.y + PinSize.HEIGHT + TAIL_HEIGHT
+    };
+    window.form.setAddress(pinTailCoords);
+  };
+
+
+
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });*/
 })();
