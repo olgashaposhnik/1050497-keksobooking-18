@@ -28,7 +28,6 @@
     MIN: 1,
     MAX: 10
   };
-  console.log(TITLES)
 
   var createObjectCard = function (i) {
     return {

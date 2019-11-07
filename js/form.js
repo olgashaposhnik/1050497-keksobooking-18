@@ -31,19 +31,11 @@
     var key = roomNumber.value; // cледим за выбранным количеством комнат
     var disabledOptions = capacityOptionsObj[key]; // disabledOptions - value из capacity
     for (var k = 0; k < capacity.options.length; k++) {
-      if (disabledOptions.includes(capacity.options[k].value)) {
-        capacity.options[k].disabled = true;
-      } else {
-        capacity.options[k].disabled = false;
-      }
+      capacity.options[k].disabled = (disabledOptions.includes(capacity.options[k].value)) ? true : false;
     }
     if (disabledOptions.includes(capacity.selectedOptions[0].value)) {
       [].forEach.call(capacity.options, function (option) {
-        if (option.value === capacityOptionsTrue[key][0]) {
-          option.selected = true;
-        } else {
-          option.selected = false;
-        }
+        option.selected = (option.value === capacityOptionsTrue[key][0]) ? true : false;
       });
     }
   };

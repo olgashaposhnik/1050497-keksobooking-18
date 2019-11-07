@@ -13,13 +13,13 @@
     return document.querySelector('.map_card');
   };
 
-  var onButtonPinClick = function (evt) { // odl
-    var optionsObject = evt.currentTarget._options; // odl
-    var advertisementCard = window.card.createCard(optionsObject); // odl
+  var onButtonPinClick = function (evt) {
+    var optionsObject = evt.currentTarget._options;
+    var advertisementCard = window.card.createCard(optionsObject);
     if (mapCard()) {
       mapCard().remove();
     }
-    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
+    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
   };
 
   var createButton = function (resultObject) { // клонирует пины из template
@@ -28,8 +28,8 @@
     mapPin.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
     buttonItem.querySelector('img').src = resultObject.author.avatar;
     buttonItem.querySelector('img').alt = resultObject.offer.title;
-    mapPin._options = resultObject; // odl
-    mapPin.addEventListener('click', onButtonPinClick); // odl
+    mapPin._options = resultObject;
+    mapPin.addEventListener('click', onButtonPinClick);
     return buttonItem;
   };
 
