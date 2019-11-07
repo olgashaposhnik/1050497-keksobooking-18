@@ -35,8 +35,8 @@
     onButtonPinClick: function (evt) { // odl
       var optionsObject = evt.currentTarget._options; // odl
       var advertisementCard = window.card.createCard(optionsObject); // odl
-      if (window.card.mapCard()) {
-        window.card.mapCard().remove();
+      if (window.map.mapCard()) {
+        window.map.mapCard().remove();
       }
       mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
     },
