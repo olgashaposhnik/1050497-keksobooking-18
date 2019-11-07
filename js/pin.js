@@ -9,20 +9,31 @@
   var mapPinTemplate = document.querySelector('#pin');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  window.pin = {
-    createButton: function (resultObject) { // клонирует пины из template
-      var buttonItem = mapPinTemplate.content.cloneNode(true);
-      buttonItem.querySelector('.map__pin').style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
-      buttonItem.querySelector('img').src = resultObject.author.avatar;
-      buttonItem.querySelector('img').alt = resultObject.offer.title;
-      return buttonItem;
-    },
-    onMapPinClick: function () {
-      for (var m = 0; m < window.advertisements.length; m++) {
-        var advertisementCard = window.card.createCard(window.advertisements[m]);
-        mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
-        advertisementCard.dataOptions = window.advertisements[m];
-      }
+  var mapCard = function () {
+    return document.querySelector('.map_card');
+  };
+
+  var onButtonPinClick = function (evt) { // odl
+    var optionsObject = evt.currentTarget._options; // odl
+    var advertisementCard = window.card.createCard(optionsObject); // odl
+    if (mapCard()) {
+      mapCard().remove();
     }
+    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
+  };
+
+  var createButton = function (resultObject) { // клонирует пины из template
+    var buttonItem = mapPinTemplate.content.cloneNode(true);
+    var mapPin = buttonItem.querySelector('.map__pin');
+    mapPin.style = 'left:' + (resultObject.location.x - pinParams.WIDTH / 2) + 'px; top:' + (resultObject.location.y - pinParams.HEIGHT) + 'px;'; // длина метки 84px, отнимаем ее, чтобы на место на карте метка указывала своим острым концом
+    buttonItem.querySelector('img').src = resultObject.author.avatar;
+    buttonItem.querySelector('img').alt = resultObject.offer.title;
+    mapPin._options = resultObject; // odl
+    mapPin.addEventListener('click', onButtonPinClick); // odl
+    return buttonItem;
+  };
+
+  window.pin = {
+    createButton: createButton
   };
 })();

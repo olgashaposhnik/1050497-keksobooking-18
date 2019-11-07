@@ -28,56 +28,34 @@
     MIN: 1,
     MAX: 10
   };
+  console.log(TITLES)
+
+  var createObjectCard = function (i) {
+    return {
+      author: {
+        avatar: 'img/avatars/user0' + AVATARS_NUMBERS[i] + '.png'
+      },
+      offer: {
+        title: window.utils.getRandomValues(TITLES),
+        address: window.utils.getRandomInt(screenParams.MIN_WIDTH, screenParams.MAX_WIDTH) + ', ' + window.utils.getRandomInt(screenParams.MIN_HEIGHT, screenParams.MAX_HEIGHT),
+        price: window.utils.getRandomInt(price.MIN, price.MAX),
+        type: window.utils.getRandomValues(TYPES),
+        rooms: window.utils.getRandomInt(rooms.MIN, rooms.MAX),
+        guests: window.utils.getRandomInt(guests.MIN, guests.MAX),
+        checkin: window.utils.getRandomValues(CHECKINS),
+        checkout: window.utils.getRandomValues(CHECKOUTS),
+        features: window.utils.createRandomValues(FEATURES),
+        description: window.utils.getRandomValues(DESCRIPTIONS),
+        photos: window.utils.createRandomValues(PHOTOS),
+      },
+      location: {
+        x: window.utils.getRandomInt(screenParams.MIN_WIDTH, screenParams.MAX_WIDTH),
+        y: window.utils.getRandomInt(screenParams.MIN_HEIGHT, screenParams.MAX_HEIGHT),
+      }
+    };
+  };
 
   window.data = {
-    getRandomInt: function (min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    },
-    getRandomValues: function (values) {
-      return values[Math.floor(Math.random() * values.length)];
-    },
-    getIntegerValue: function (value, param) {
-      return Math.floor((parseInt(value, 10) + param / 2));
-    },
-    createRandomValues: function (values) {
-      var valueNumbers = []; // создаем массив с номерами опций
-      var valuesQuantity = window.data.getRandomInt(0, values.length); // сгенерировали количество опций
-      for (var i = 0; i < valuesQuantity; i++) { // запускаем цикл с количеством итераций равным количеству запланированных опций
-        while (valueNumbers.length < valuesQuantity) { // бесконечный цикл, который прерывается только, когда мы наполним свой массив достаточным количеством опций
-          var valueNumber = window.data.getRandomInt(0, values.length - 1); // Создаем случайный индекс для массива опций
-          // По этому индексу ищем элемент массива values .Если в нашем массиве valueNumbers
-          // нет такого элемента, тогда добавляем его. Иначе запускаем новую итерацию бесконечного цикла
-          if (valueNumbers.indexOf(values[valueNumber]) === -1) {
-            valueNumbers.push(values[valueNumber]);
-          }
-        }
-      }
-      // Возвращаем созданный массив
-      return valueNumbers;
-    },
-    createObjectCard: function (i) {
-      return {
-        author: {
-          avatar: 'img/avatars/user0' + AVATARS_NUMBERS[i] + '.png'
-        },
-        offer: {
-          title: window.data.getRandomValues(TITLES),
-          address: window.data.getRandomInt(screenParams.MIN_WIDTH, screenParams.MAX_WIDTH) + ', ' + window.data.getRandomInt(screenParams.MIN_HEIGHT, screenParams.MAX_HEIGHT),
-          price: window.data.getRandomInt(price.MIN, price.MAX),
-          type: window.data.getRandomValues(TYPES),
-          rooms: window.data.getRandomInt(rooms.MIN, rooms.MAX),
-          guests: window.data.getRandomInt(guests.MIN, guests.MAX),
-          checkin: window.data.getRandomValues(CHECKINS),
-          checkout: window.data.getRandomValues(CHECKOUTS),
-          features: window.data.createRandomValues(FEATURES),
-          description: window.data.getRandomValues(DESCRIPTIONS),
-          photos: window.data.createRandomValues(PHOTOS),
-        },
-        location: {
-          x: window.data.getRandomInt(screenParams.MIN_WIDTH, screenParams.MAX_WIDTH),
-          y: window.data.getRandomInt(screenParams.MIN_HEIGHT, screenParams.MAX_HEIGHT),
-        }
-      };
-    }
+    createObjectCard: createObjectCard
   };
 })();
