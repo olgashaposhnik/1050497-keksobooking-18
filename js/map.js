@@ -49,7 +49,7 @@
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
-    adress.value = window.data.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.data.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
+    adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
   };
 
   mapPinMain.addEventListener('mousedown', onMapPinMainClick);

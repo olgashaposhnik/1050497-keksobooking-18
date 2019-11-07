@@ -60,7 +60,7 @@
     adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
   }
 
-  adress.value = window.data.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.data.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+  adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
 
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
 
