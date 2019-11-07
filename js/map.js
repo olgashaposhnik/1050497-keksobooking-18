@@ -16,32 +16,30 @@
   window.advertisements = advertisements;
   var ENTER_KEYCODE = 13;
   var PIN_HEIGHT_BEFORE = 22;
-  var screenIndent = 70;
-  var screenParams = {
+  /* var screenIndent = 70;
+   var screenParams = {
     MIN_WIDTH: 70,
     MAX_WIDTH: document.querySelector('.map').offsetWidth - screenIndent,
     MIN_HEIGHT: 130,
     MAX_HEIGHT: 630,
-  };
+  };*/
   var pinParams = {
     WIDTH: document.querySelector('.map__pin').offsetWidth,
     HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
   };
 
-  var mapCard = function () {
-    return document.querySelector('.map_card');
-  };
-
-  var onButtonPinClick = function(evt) { // odl
-    var optionsObject = evt.currentTarget._options; // odl
-    var advertisementCard = window.card.createCard(optionsObject); // odl
-    if (mapCard()) {
-      mapCard().remove();
-    };
-    mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
-  };
-
   window.map = {
+    mapCard: function () {
+      return document.querySelector('.map_card');
+    },
+    onButtonPinClick: function (evt) { // odl
+      var optionsObject = evt.currentTarget._options; // odl
+      var advertisementCard = window.card.createCard(optionsObject); // odl
+      if (window.card.mapCard()) {
+        window.card.mapCard().remove();
+      }
+      mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard); // odl
+    },
     createButton: function (resultObject) { // клонирует пины из template
       var buttonItem = mapPinTemplate.content.cloneNode(true);
       var mapPin = buttonItem.querySelector('.map__pin');
@@ -49,7 +47,7 @@
       buttonItem.querySelector('img').src = resultObject.author.avatar;
       buttonItem.querySelector('img').alt = resultObject.offer.title;
       mapPin._options = resultObject; // odl
-      mapPin.addEventListener('click', onButtonPinClick); // odl
+      mapPin.addEventListener('click', window.map.onButtonPinClick); // odl
       return buttonItem;
     },
     classRemove: function (element, className) {
@@ -107,12 +105,9 @@
       RIGHT: screenParams.MAX_WIDTH - pinParams.WIDTH,
       BOTTOM: DragLimit.Y.MAX - mapPinMain.offsetHeight - TAIL_HEIGHT
     };
-
-
-
+_______________________
     moveEvt.preventDefault();
-
-
+_______________________
     var Border = {
       TOP: DragLimit.Y.MIN - mapPinMain.offsetHeight - TAIL_HEIGHT,
       BOTTOM: DragLimit.Y.MAX - mapPinMain.offsetHeight - TAIL_HEIGHT,
@@ -131,11 +126,8 @@
     };
     window.form.setAddress(pinTailCoords);
   };
-
-
-
-
-    document.addEventListener('mousemove', onMouseMove);
+__________________
+  document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
   });*/
 })();
