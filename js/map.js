@@ -52,6 +52,7 @@
   };
 
   adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+  adress.setAttribute('readonly', 'true');
 
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
     for (var m = 0; m < mapFiltersSelect.length; m++) {
@@ -59,14 +60,17 @@
     }
   };
 
+  mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
+  
   mapFiltersSelectDisabled();
 
-  mapPinMain.addEventListener('mousedown', onMapPinMainClick);
+  mapPinMain.addEventListener('click', onMapPinMainClick);
 
-  mapPinMain.addEventListener('keydown', function (evt) { // переводим страницу в активный режим при нажатии на энтер
+  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на энтер
     if (evt.keyCode === ENTER_KEYCODE) {
       onMapPinMainClick();
     }
+    mapPinMain.removeEventListener('click', onMapPinMainClick);
   });
 
   mapPinMain.addEventListener('mousedown', function (evt) {
@@ -101,10 +105,9 @@
       if (mapPinMainPosition.x >= moveLimit.LEFT && mapPinMainPosition.x <= moveLimit.RIGHT) {
         mapPinMain.style.left = mapPinMainPosition.x + 'px';
       }
-      if (mapPinMainPosition.y >= moveLimit.TOP && mapPinMainPosition.y <= moveLimit.BOTTOM) {
+      if (mapPinMainPosition.y <= moveLimit.TOP && mapPinMainPosition.y >= moveLimit.BOTTOM) {
         mapPinMain.style.top = mapPinMainPosition.y + 'px';
       }
-      console.log(moveLimit.BOTTOM)
       var buttonPinCoords = {
         x: window.utils.getIntegerValue(mapPinMainPosition.x, pinParams.WIDTH),
         y: window.utils.getIntegerValue(mapPinMainPosition.y, pinParams.HEIGHT * 2)

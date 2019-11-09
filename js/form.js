@@ -6,6 +6,11 @@
   var adForm = document.querySelector('.ad-form');
   var adFormFieldset = adForm.querySelectorAll('fieldset');
   var capacity = document.querySelector('#capacity');
+  var title = document.querySelector('#title');
+  var price = document.querySelector('#price');
+  var type = document.querySelector('#type');
+  var timein = document.querySelector('#timein');
+  var timeout = document.querySelector('#timeout');
   var capacityOptionsTrue = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -28,8 +33,138 @@
     adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
   }
 
-  mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
-
   roomNumber.addEventListener('change', onNumberSelectChange); // Устанавливаем соответствие количества комнат количеству гостей
   onNumberSelectChange();
+
+  title.addEventListener('invalid', function (evt) {
+    if (title.validity.tooShort) {
+      title.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    } else if (title.validity.tooLong) {
+      title.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    } else if (title.validity.valueMissing) {
+      title.setCustomValidity('Обязательное поле');
+    } else {
+      title.setCustomValidity('');
+    }
+
+  });
+
+  title.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value.length < 30) {
+      target.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    } else if (target.value.length > 100) {
+      target.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    } else if (target.value.length == 0) {
+      target.setCustomValidity('Обязательное поле');
+    } else {
+      target.setCustomValidity('');
+    }
+  });
+
+  price.addEventListener('invalid', function (evt) {
+    if (price.validity.rangeUnderflow) {
+      title.setCustomValidity('Минимальная цена за ночь 0 рублей');
+    } else if (price.validity.rangeOverflow) {
+      title.setCustomValidity('Максимальная цена за ночь 1 000 000 рублей');
+    } else {
+      price.setCustomValidity('');
+    }
+  });
+
+  price.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value < 0) {
+      target.setCustomValidity('Минимальная цена за ночь 0 рублей');
+    } else if (target.value > 1000000) {
+      target.setCustomValidity('Максимальная цена за ночь 1 000 000 рублей');
+    } else if (type.value == "bungalo") {
+      target.setCustomValidity('Минимальная цена за ночь 0 рублей');
+    } else if (type.value == "flat") {
+      target.setCustomValidity('Минимальная цена за ночь 1000 рублей');
+    } else if (type.value == "house") {
+      target.setCustomValidity('Минимальная цена за ночь 5000 рублей');
+    } else if (type.value == "palace") {
+      target.setCustomValidity('Минимальная цена за ночь 10000 рублей');
+    } else {
+      target.setCustomValidity('');
+    }
+  });
+
+  var onTypeSelectChange = function () { // Устанавливаем соответствие цены типу жилья
+    if (type.value == "bungalo") {
+      price.setAttribute('min', '0');
+      price.setAttribute('placeholder', '0');
+    } else if (type.value == "flat") {
+      price.setAttribute('min', '1000');
+      price.setAttribute('placeholder', '1000');
+    } else if (type.value == "house") {
+      price.setAttribute('min', '5000');
+      price.setAttribute('placeholder', '5000');
+    } else {
+      price.setAttribute('min', '10000');
+      price.setAttribute('placeholder', '10000');
+    }
+  };
+
+  type.addEventListener('change', onTypeSelectChange);
+  onTypeSelectChange();
+
+  type.addEventListener('invalid', function (evt) {var target = evt.target;
+    if (type.value == "bungalo") {
+      price.setCustomValidity('Минимальная цена за ночь 0 рублей');
+    } else if (type.value == "flat") {
+      price.setCustomValidity('Минимальная цена за ночь 1000 рублей');
+    } else if (type.value == "house") {
+      price.setCustomValidity('Минимальная цена за ночь 5000 рублей');
+    } else if (type.value == "palace") {
+      price.setCustomValidity('Минимальная цена за ночь 10000 рублей');
+    } else {
+      price.setCustomValidity('');
+    }
+  });
+
+  var onTimeinSelectChange = function () { // Устанавливаем соответствие цены типу жилья
+    for (var i = 0; i < timein.options.length; i++) {
+      timeout.options[i].disabled = !timein.options[i];
+    }
+  };
+/*
+  for (var k = 0; k < capacity.options.length; k++) {
+    capacity.options[k].disabled = !activeOptions.includes(capacity.options[k].value);
+  }*/
+
+  timein.addEventListener('change', onTimeinSelectChange);
+  onTimeinSelectChange();
+
+  timein.addEventListener('invalid', function (evt) {
+    if (timein.value = !timeout.value) {
+      timeout.value = timein.value
+      title.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    } else if (title.validity.tooLong) {
+      title.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    } else if (title.validity.valueMissing) {
+      title.setCustomValidity('Обязательное поле');
+    } else {
+      title.setCustomValidity('');
+    }
+  });
+
+  title.addEventListener('input', function (evt) {
+    var target = evt.target;
+    if (target.value.length < 30) {
+      target.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
+    } else if (target.value.length > 100) {
+      target.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
+    } else if (target.value.length == 0) {
+      target.setCustomValidity('Обязательное поле');
+    } else {
+      target.setCustomValidity('');
+    }
+  });
 })();
+
+/*
+Поля «Время заезда» и «Время выезда» синхронизированы: при изменении значения одного поля,
+во втором выделяется соответствующее ему. Например, если время заезда указано «после 14»,
+то время выезда будет равно «до 14» и наоборот.*/
