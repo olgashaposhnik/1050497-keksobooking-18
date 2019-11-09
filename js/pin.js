@@ -15,7 +15,7 @@
 
   var onButtonPinClick = function (evt) {
     var optionsObject = evt.currentTarget._options;
-    var advertisementCard = window.card.createCard(optionsObject);
+    var advertisementCard = window.card.create(optionsObject);
     if (mapCard()) {
       mapCard().remove();
     }
@@ -34,6 +34,6 @@
   };
 
   window.pin = {
-    createButton: createButton
+    create: createButton
   };
 })();

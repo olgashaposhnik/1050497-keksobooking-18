@@ -30,12 +30,10 @@
     return valueNumbers;
   };
 
-  var utils = {
+  window.utils = {
     getRandomInt: getRandomInt,
     getRandomValues: getRandomValues,
     getIntegerValue: getIntegerValue,
     createRandomValues: createRandomValues
   };
-
-  window.utils = utils;
 })();

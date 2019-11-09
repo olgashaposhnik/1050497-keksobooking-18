@@ -55,6 +55,6 @@
   };
 
   window.data = {
-    createObjectCard: createObjectCard
+    create: createObjectCard
   };
 })();
