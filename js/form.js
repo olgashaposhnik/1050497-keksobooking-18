@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var PIN_HEIGHT_BEFORE = 22;
   var roomNumber = document.querySelector('#room_number');
   var adForm = document.querySelector('.ad-form');
   var adFormFieldset = adForm.querySelectorAll('fieldset');
@@ -14,12 +15,20 @@
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersSelect = mapFilters.querySelectorAll('select');
   var mapPinMain = document.querySelector('.map__pin--main');
+  var adress = document.querySelector('#address');
+  var pinParams = {
+    WIDTH: document.querySelector('.map__pin').offsetWidth,
+    HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
+  };
   var capacityOptionsTrue = {
     '1': ['1'],
     '2': ['1', '2'],
     '3': ['1', '2', '3'],
     '100': ['0']
   };
+
+  adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+  adress.setAttribute('readonly', 'true');
 
   var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
     var key = roomNumber.value; // cледим за выбранным количеством комнат

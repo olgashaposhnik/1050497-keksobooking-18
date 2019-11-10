@@ -51,9 +51,6 @@
     adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
   };
 
-  adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
-  adress.setAttribute('readonly', 'true');
-
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
     for (var m = 0; m < mapFiltersSelect.length; m++) {
       mapFiltersSelect[m].setAttribute('disabled', 'disabled');
