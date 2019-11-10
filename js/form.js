@@ -10,6 +10,10 @@
   var type = document.querySelector('#type');
   var timein = document.querySelector('#timein');
   var timeout = document.querySelector('#timeout');
+  var map = document.querySelector('.map');
+  var mapFilters = document.querySelector('.map__filters');
+  var mapFiltersSelect = mapFilters.querySelectorAll('select');
+  var mapPinMain = document.querySelector('.map__pin--main');
   var capacityOptionsTrue = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -96,6 +100,20 @@
     }
   };
 
+  var onFormSubmitClick = function () {
+    map.classList.add('map--faded');
+    adForm.classList.add('ad-form--disabled');
+    for (var j = 0; j < adFormFieldset.length; j++) {
+      adFormFieldset[j].classList.add('disabled');
+    }
+    for (var l = 0; l < mapFiltersSelect.length; l++) {
+      mapFiltersSelect[l].setAttribute('disabled');
+    }
+    document.querySelectorAll('.map__pin:not(.map__pin—main)').remove();
+    mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
+    adForm.reset();
+  };
+
   type.addEventListener('change', onTypeSelectChange);
   onTypeSelectChange();
 
@@ -105,5 +123,12 @@
 
   timeout.addEventListener('change', function (evt) {
     timein.value = evt.target.value;
+  });
+
+  adForm.addEventListener('submit', function (evt) {
+    window.upload(new FormData(adForm), function (/* response*/) {
+      onFormSubmitClick();
+    });
+    evt.preventDefault();
   });
 })();
