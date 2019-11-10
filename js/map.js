@@ -61,7 +61,6 @@
   };
 
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
-  
   mapFiltersSelectDisabled();
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
