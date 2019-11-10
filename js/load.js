@@ -1,7 +1,12 @@
 'use strict';
 
 (function () {
-  window.load = function (url, onSuccess, onError) {
+  /* var upload = function (data, onSuccess) {
+
+  };*/
+
+
+  var load = function (url, onSuccess, onError) {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'json';
@@ -26,5 +31,10 @@
 
     xhr.open('GET', url);
     xhr.send();
-  }
+  };
+
+  window.load = {
+    /* upload: upload,*/
+    load: load
+  };
 })();
