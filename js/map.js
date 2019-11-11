@@ -3,7 +3,6 @@
 (function () {
   var ENTER_KEYCODE = 13;
   var PIN_HEIGHT_BEFORE = 22;
-  var TITLES = ['квартира в Токио', 'аппартаменты Москва', 'Комната в Париже', '3-х комнатная квартира в Риге', 'комната в Санкт-Петербурге', 'домик в Севастополе', 'квартира в Донецке', 'аппартаменты в Берлине'];
   var advertisementList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
@@ -11,8 +10,9 @@
   var adForm = document.querySelector('.ad-form');
   var adFormFieldset = adForm.querySelectorAll('fieldset');
   var mapPinMain = document.querySelector('.map__pin--main');
-  var adress = document.querySelector('#address');
-  var advertisements = [];
+  var errorTemplate = document.querySelector('#error');
+  var errorMessage = errorTemplate.content.querySelector('.error');
+  var mainBlock = errorTemplate.content.querySelector('.main');
   var screenIndent = 70;
   var screenParams = {
     MIN_WIDTH: 70,
@@ -29,29 +29,19 @@
     element.classList.remove(className);
   };
 
-  var onSuccessLoad = function (advertisements) {
+  var onSuccessLoad = function (data) {
     var fragment = document.createDocumentFragment();
 
-    for (var a = 0; a < advertisements.length; a++) {
-      advertisements[a] = window.data.create(a);
-    }
-    for (var m = 0; m < advertisements.length; m++) {
-      var advertisementItem = window.pin.create(advertisements[m]);
+    for (var m = 0; m < data.length; m++) {
+      var advertisementItem = window.pin.create(data[m]);
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
   };
 
-  var onErrorLoad = function (errorMessage) {
-    var node = document.createElement('div');
-    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
-    node.style.position = 'absolute';
-    node.style.left = 0;
-    node.style.right = 0;
-    node.style.fontSize = '30px';
-
-    node.textContent = errorMessage;
-    document.body.insertAdjacentElement('afterbegin', node);
+  var onErrorLoad = function () {
+    var Error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', Error);
   };
 
   var getMapPinMainAddress = function () {
@@ -62,7 +52,7 @@
     return window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
   };
 
-  window.form.set (getMapPinAddress());
+  window.form.set(getMapPinAddress());
 
   var onMapPinMainClick = function () {
     // Удаляем у блока .map класс .map--faded
@@ -74,18 +64,7 @@
     for (var l = 0; l < mapFiltersSelect.length; l++) {
       mapFiltersSelect[l].removeAttribute('disabled');
     }
-    onSuccessLoad();
-    /*
-    for (var a = 0; a < TITLES.length; a++) {
-      advertisements[a] = window.data.create(a);
-    }
-    var fragment = document.createDocumentFragment();
-    for (var m = 0; m < advertisements.length; m++) {
-      var advertisementItem = window.pin.create(advertisements[m]);
-      fragment.appendChild(advertisementItem);
-    }
-    advertisementList.appendChild(fragment);*/
-    window.form.set (getMapPinMainAddress);
+    window.form.set(getMapPinMainAddress);
   };
 
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
@@ -148,7 +127,7 @@
       var getButtonPinAddress = function () {
         return buttonPinCoords.x + ', ' + buttonPinCoords.y;
       };
-      window.form.set (getButtonPinAddress);
+      window.form.set(getButtonPinAddress);
     };
 
     var onMouseUp = function (upEvt) {
@@ -172,7 +151,6 @@
 
   window.map = {
     getMainAddress: getMapPinMainAddress,
-    getPinAddress: getButtonPinAddress,
     getAddress: getMapPinAddress
   };
 })();
