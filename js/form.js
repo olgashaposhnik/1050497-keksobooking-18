@@ -27,7 +27,10 @@
     '100': ['0']
   };
 
-  adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+  var setAddress = function (data) {
+    adress.value = data;
+  };
+
   adress.setAttribute('readonly', 'true');
 
   var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
@@ -140,4 +143,8 @@
     });
     evt.preventDefault();
   });
+
+  window.form = {
+    set: setAddress
+  };
 })();

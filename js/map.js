@@ -29,6 +29,41 @@
     element.classList.remove(className);
   };
 
+  var onSuccessLoad = function (advertisements) {
+    var fragment = document.createDocumentFragment();
+
+    for (var a = 0; a < advertisements.length; a++) {
+      advertisements[a] = window.data.create(a);
+    }
+    for (var m = 0; m < advertisements.length; m++) {
+      var advertisementItem = window.pin.create(advertisements[m]);
+      fragment.appendChild(advertisementItem);
+    }
+    advertisementList.appendChild(fragment);
+  };
+
+  var onErrorLoad = function (errorMessage) {
+    var node = document.createElement('div');
+    node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+    node.style.position = 'absolute';
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = '30px';
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement('afterbegin', node);
+  };
+
+  var getMapPinMainAddress = function () {
+    return window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
+  };
+
+  var getMapPinAddress = function () {
+    return window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
+  };
+
+  window.form.set (getMapPinAddress());
+
   var onMapPinMainClick = function () {
     // Удаляем у блока .map класс .map--faded
     classRemove(map, 'map--faded');
@@ -39,6 +74,8 @@
     for (var l = 0; l < mapFiltersSelect.length; l++) {
       mapFiltersSelect[l].removeAttribute('disabled');
     }
+    onSuccessLoad();
+    /*
     for (var a = 0; a < TITLES.length; a++) {
       advertisements[a] = window.data.create(a);
     }
@@ -47,8 +84,8 @@
       var advertisementItem = window.pin.create(advertisements[m]);
       fragment.appendChild(advertisementItem);
     }
-    advertisementList.appendChild(fragment);
-    adress.value = window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, pinParams.HEIGHT * 2);
+    advertisementList.appendChild(fragment);*/
+    window.form.set (getMapPinMainAddress);
   };
 
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
@@ -108,7 +145,10 @@
         x: window.utils.getIntegerValue(mapPinMainPosition.x, pinParams.WIDTH),
         y: window.utils.getIntegerValue(mapPinMainPosition.y, pinParams.HEIGHT * 2)
       };
-      adress.value = buttonPinCoords.x + ', ' + buttonPinCoords.y;
+      var getButtonPinAddress = function () {
+        return buttonPinCoords.x + ', ' + buttonPinCoords.y;
+      };
+      window.form.set (getButtonPinAddress);
     };
 
     var onMouseUp = function (upEvt) {
@@ -127,5 +167,12 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
+    window.load.page(onSuccessLoad, onErrorLoad);
   });
+
+  window.map = {
+    getMainAddress: getMapPinMainAddress,
+    getPinAddress: getButtonPinAddress,
+    getAddress: getMapPinAddress
+  };
 })();
