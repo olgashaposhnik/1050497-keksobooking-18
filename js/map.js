@@ -60,7 +60,6 @@
     // Удаляем у блока .map класс .map--faded
     classRemove(map, 'map--faded');
     window.form.activateAdForm();
-    window.form.activateAdForm();
     for (var l = 0; l < mapFiltersSelect.length; l++) {
       mapFiltersSelect[l].removeAttribute('disabled');
     }
