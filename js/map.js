@@ -11,6 +11,9 @@
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
   var mainBlock = errorTemplate.content.querySelector('.main');
+  var filters = document.querySelector('.map__filters'); // УДАЛИТЬ!!!!!!!!!!!!!!!!
+  var typeSelect = filters.querySelector('#housing-type'); // УДАЛИТЬ!!!!!!!!!!!!!!!!
+  /* var type; // УДАЛИТЬ!!!!!!!!!!!!!!!!*/
   var advertisements = [];
   var screenIndent = 70;
   var screenParams = {
@@ -27,20 +30,63 @@
   var classRemove = function (element, className) {
     element.classList.remove(className);
   };
-  /*
-  var updateAdvertisements  = function () {
-    window.render(wizards);
-  }*/
 
-  var onSuccessLoad = function (data) {
-    advertisements = data;
+  /* var createAdvertisements = function () {
     var fragment = document.createDocumentFragment();
+    for (var m = 0; m < advertisements.length; m++) {
+      var advertisementItem = window.pin.create(advertisements[m]);
+      fragment.appendChild(advertisementItem);
+    }
+    advertisementList.appendChild(fragment);
+  };*/
+
+  var createSameAdvertisements = function (/* adv*/) {
+    var adv = [];
+    var fragment = document.createDocumentFragment();
+    for (var m = 0; m < adv.length; m++) {
+      var advertisementItem = window.pin.create(adv[m]);
+      fragment.appendChild(advertisementItem);
+    }
+    advertisementList.appendChild(fragment);
+  };
+
+  /* var updateAdvertisements = function () {
+    var sameTypes = advertisements.filter(function(it) {
+      return it.value === type;
+    });
+    var newType = typeSelect.value;
+
+    /*window.render(sameTypes);
+    createAdvertisements();
+    createSameAdvertisements(sameTypes);
+    /* var fragment = document.createDocumentFragment();
 
     for (var m = 0; m < advertisements.length; m++) {
       var advertisementItem = window.pin.create(advertisements[m]);
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
+  };*/
+
+  var onTypeSelectChange = function () { // НЕ ЗАБЫТЬ, ЧТО ЭТО ОТНОСИТСЯ К ДРУГОМУ МОДУЛЮ!!!!!!!!!!!!!!!!
+    var newType = typeSelect.value;
+    type = newType; // При смене типа, запоминаем текущий выбранный
+    /* window.map.*/ createSameAdvertisements(newType);
+  };
+
+  typeSelect.addEventListener('change', onTypeSelectChange); // НЕ ЗАБЫТЬ, ЧТО ЭТО ОТНОСИТСЯ К ДРУГОМУ МОДУЛЮ!!!!!!!!!!!!!!!!
+  onTypeSelectChange(); // НЕ ЗАБЫТЬ, ЧТО ЭТО ОТНОСИТСЯ К ДРУГОМУ МОДУЛЮ!!!!!!!!!!!!!!!!
+
+  var onSuccessLoad = function (data) {
+    advertisements = data;
+    /* updateAdvertisements();
+    /* var fragment = document.createDocumentFragment();
+
+    for (var m = 0; m < advertisements.length; m++) {
+      var advertisementItem = window.pin.create(advertisements[m]);
+      fragment.appendChild(advertisementItem);
+    }
+    advertisementList.appendChild(fragment);*/
   };
 
   var onErrorLoad = function () {
@@ -158,6 +204,7 @@
     getMainAddress: getMapPinMainAddress,
     getAddress: getMapPinAddress,
     deactivate: deactivateMap,
-    mapFiltersSelectDisabled: mapFiltersSelectDisabled
+    mapFiltersSelectDisabled: mapFiltersSelectDisabled,
+    createSameAdvertisements: createSameAdvertisements
   };
 })();

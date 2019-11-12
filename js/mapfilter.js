@@ -10,10 +10,15 @@
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
+  var type;
 
-  typeSelect.addEventListener('click', function () {
-    var newType = window.utils.getRandomValues(typeSelect.options);
-    this.option.selected = newType; // подозреваю, что неправильно
+  typeSelect.addEventListener('change', function () {
+    var newType = typeSelect.value;
     type = newType; // При смене типа, запоминаем текущий выбранный
-  });*/
+    window.map.updateAdvertisements();
+  });
+
+  var filtrationItem = function (it, item, key) {
+    return it.value === 'any' ? true : it.value === item[key].toString();
+  };*/
 })();
