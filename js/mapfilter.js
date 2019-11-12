@@ -9,5 +9,11 @@
   var priceSelect = filters.querySelector('#housing-price');
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
-  var featuresFieldset = filters.querySelector('#housing-features');*/
+  var featuresFieldset = filters.querySelector('#housing-features');
+
+  typeSelect.addEventListener('click', function () {
+    var newType = window.utils.getRandomValues(typeSelect.options);
+    this.option.selected = newType; // подозреваю, что неправильно
+    type = newType; // При смене типа, запоминаем текущий выбранный
+  });*/
 })();

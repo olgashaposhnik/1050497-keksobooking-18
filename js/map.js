@@ -11,6 +11,7 @@
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
   var mainBlock = errorTemplate.content.querySelector('.main');
+  var advertisements = [];
   var screenIndent = 70;
   var screenParams = {
     MIN_WIDTH: 70,
@@ -26,12 +27,17 @@
   var classRemove = function (element, className) {
     element.classList.remove(className);
   };
+  /*
+  var updateAdvertisements  = function () {
+    window.render(wizards);
+  }*/
 
   var onSuccessLoad = function (data) {
+    advertisements = data;
     var fragment = document.createDocumentFragment();
 
-    for (var m = 0; m < data.length; m++) {
-      var advertisementItem = window.pin.create(data[m]);
+    for (var m = 0; m < advertisements.length; m++) {
+      var advertisementItem = window.pin.create(advertisements[m]);
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
