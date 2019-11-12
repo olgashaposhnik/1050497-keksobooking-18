@@ -10,9 +10,6 @@
   var type = document.querySelector('#type');
   var timein = document.querySelector('#timein');
   var timeout = document.querySelector('#timeout');
-  var map = document.querySelector('.map');
-  var mapFilters = document.querySelector('.map__filters');
-  var mapFiltersSelect = mapFilters.querySelectorAll('select');
   var mapPinMain = document.querySelector('.map__pin--main');
   var adress = document.querySelector('#address');
   var capacityOptionsTrue = {
@@ -42,6 +39,16 @@
   for (var i = 0; i < adFormFieldset.length; i++) {
     adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
   }
+
+  var activateAdForm = function () {
+    adForm.classList.remove('ad-form--disabled');
+  };
+
+  var activateAdFormFieldset = function () {
+    for (var j = 0; j < adFormFieldset.length; j++) {
+      adFormFieldset[j].classList.remove('disabled');
+    }
+  };
 
   roomNumber.addEventListener('change', onNumberSelectChange); // Устанавливаем соответствие количества комнат количеству гостей
   onNumberSelectChange();
@@ -108,14 +115,12 @@
   };
 
   var onFormSubmitClick = function () {
-    map.classList.add('map--faded');
+    window.map.deactivate();
     adForm.classList.add('ad-form--disabled');
     for (var j = 0; j < adFormFieldset.length; j++) {
       adFormFieldset[j].classList.add('disabled');
     }
-    for (var l = 0; l < mapFiltersSelect.length; l++) {
-      mapFiltersSelect[l].setAttribute('disabled');
-    }
+    window.map.mapFiltersSelectDisabled();
     document.querySelectorAll('.map__pin:not(.map__pin—main)').remove();
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
@@ -140,6 +145,8 @@
   });
 
   window.form = {
-    set: setAddress
+    setAddress: setAddress,
+    activateAdFormFieldset: activateAdFormFieldset,
+    activateAdForm: activateAdForm
   };
 })();

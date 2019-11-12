@@ -7,8 +7,6 @@
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
   var mapFiltersSelect = mapFilters.querySelectorAll('select');
-  var adForm = document.querySelector('.ad-form');
-  var adFormFieldset = adForm.querySelectorAll('fieldset');
   var mapPinMain = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
@@ -52,19 +50,21 @@
     return window.utils.getIntegerValue(mapPinMain.style.left, pinParams.WIDTH) + ', ' + window.utils.getIntegerValue(mapPinMain.style.top, (pinParams.HEIGHT - PIN_HEIGHT_BEFORE));
   };
 
-  window.form.set(getMapPinAddress());
+  var deactivateMap = function () {
+    map.classList.add('map--faded');
+  };
+
+  window.form.setAddress(getMapPinAddress());
 
   var onMapPinMainClick = function () {
     // Удаляем у блока .map класс .map--faded
     classRemove(map, 'map--faded');
-    classRemove(adForm, 'ad-form--disabled');
-    for (var j = 0; j < adFormFieldset.length; j++) {
-      classRemove(adFormFieldset[j], 'disabled');
-    }
+    window.form.activateAdForm();
+    window.form.activateAdForm();
     for (var l = 0; l < mapFiltersSelect.length; l++) {
       mapFiltersSelect[l].removeAttribute('disabled');
     }
-    window.form.set(getMapPinMainAddress);
+    window.form.setAddress(getMapPinMainAddress());
   };
 
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
@@ -127,7 +127,7 @@
       var getButtonPinAddress = function () {
         return buttonPinCoords.x + ', ' + buttonPinCoords.y;
       };
-      window.form.set(getButtonPinAddress);
+      window.form.setAddress(getButtonPinAddress());
     };
 
     var onMouseUp = function (upEvt) {
@@ -151,6 +151,8 @@
 
   window.map = {
     getMainAddress: getMapPinMainAddress,
-    getAddress: getMapPinAddress
+    getAddress: getMapPinAddress,
+    deactivate: deactivateMap,
+    mapFiltersSelectDisabled: mapFiltersSelectDisabled
   };
 })();
