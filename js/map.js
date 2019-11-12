@@ -83,7 +83,7 @@
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
 
-  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на энтер
+  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на enter
     if (evt.keyCode === ENTER_KEYCODE) {
       onMapPinMainClick();
     }
