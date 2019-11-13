@@ -28,6 +28,6 @@
   };
 
   window.load = {
-    page: pageLoad
+    pageLoad: pageLoad
   };
 })();
