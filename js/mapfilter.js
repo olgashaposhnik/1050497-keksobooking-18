@@ -9,9 +9,8 @@
   var priceSelect = filters.querySelector('#housing-price');
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
-  var featuresFieldset = filters.querySelector('#housing-features');
-  /* var advertisements = []; // УДАЛИТЬ!!!!
-  var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!*/
+  /* var featuresFieldset = filters.querySelector('#housing-features');*/
+  var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!
   var PriceRange = {
     LOW: {
       MIN: 0,
@@ -35,27 +34,28 @@
     features: null
   };
 
+  var cleanAdvertisementList = function () { // функцию, которая очищает область от старых пинов
+    Array.from(advertisementList.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
+      item.remove();
+    });
+  };
+
   var updateFilterOptions = function () {
     filterOptions.type = typeSelect.value;
     filterOptions.price = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр.
     filterOptions.rooms = parseInt(roomsSelect.value, 10);
     filterOptions.guests = parseInt(guestsSelect.value, 10);
-    filterOptions.features = featuresFieldset.querySelectorAll('input:checked');
+    // filterOptions.features = featuresFieldset.querySelectorAll('input:checked');
   };
 
-  /* var createAdvertisements = function () {
+  var updateAdvertisements = function (data) {
     var fragment = document.createDocumentFragment();
-    for (var m = 0; m < advertisements.length; m++) {
-      var advertisementItem = window.pin.create(advertisements[m]);
+    for (var m = 0; m < data.length; m++) {
+      var advertisementItem = window.pin.create(data[m]);
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
   };
-
-  var onSuccessLoad = function (data) { //
-    advertisements = data;
-    createAdvertisements();
-  }; */
 
   var filterData = function (data) {
     Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
@@ -69,13 +69,15 @@
         return item.offer[key] === filterOptions[key];
       });
     });
+    cleanAdvertisementList();
+    updateAdvertisements(data);
   };
 
   /* var filterPrice = function (data) {
     return filterOptions.price >= filterOptions.price.MIN && data.offer.price <= filterOptions.price.MAX;
   };
 
-  var filterFeatures = function (item) {
+   var filterFeatures = function (item) {
     return Array.from(filterOptions.features).every(function (element) {
       return item.offer.features.includes(element.value);
     });

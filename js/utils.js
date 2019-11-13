@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var DEBOUNCE_INTERVAL = 300; // ms
 
   var getRandomInt = function (min, max) {
@@ -32,6 +33,13 @@
     return valueNumbers;
   };
 
+  var onEscDown = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      var popup = document.querySelector('.map__card.popup');
+      popup.remove();
+    }
+  };
+
   var debounce = function (cb) {
     var lastTimeout = null;
 
@@ -51,6 +59,7 @@
     getRandomValues: getRandomValues,
     getIntegerValue: getIntegerValue,
     createRandomValues: createRandomValues,
+    onEscDown: onEscDown,
     debounce: debounce
   };
 })();

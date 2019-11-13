@@ -30,6 +30,7 @@
     buttonItem.querySelector('img').alt = resultObject.offer.title;
     mapPin._options = resultObject;
     mapPin.addEventListener('click', onButtonPinClick);
+    document.addEventListener('keydown', window.utils.onEscDown);
     return buttonItem;
   };
 
