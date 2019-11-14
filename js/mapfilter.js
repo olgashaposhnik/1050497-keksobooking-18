@@ -10,8 +10,10 @@
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
+  var features = featuresFieldset.querySelectorAll('input');
+  /* var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');*/
   var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!
-  var PriceRange = {
+  /* var PriceRange = {
     LOW: {
       MIN: 0,
       MAX: 10000
@@ -24,7 +26,7 @@
       MIN: 50000,
       MAX: Infinity
     }
-  };
+  };*/
   var form = document.querySelector('form');
   var filterOptions = {
     type: null,
@@ -34,30 +36,26 @@
     features: null
   };
 
-  var cleanAdvertisementList = function () { // функцию, которая очищает область от старых пинов
+  var cleanAdvertisementList = function () { // функция, которая очищает область от старых пинов
     Array.from(advertisementList.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
       item.remove();
     });
   };
 
-  var getFilterPrice = function (data) {
-    for (var filterOption in filterOptions) {
-      var option = filterOptions[filterOption];
-      if (option === 'price'){
-        var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
-        return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
-      }
-    }
-  };
-
-  console.log(getFilterPrice());
+  /* var getFilterPrice = function (data) {
+    var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
+    return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
+  };*/
 
   var updateFilterOptions = function () {
     filterOptions.type = typeSelect.value;
     filterOptions.price = priceSelect.value;
     filterOptions.rooms = parseInt(roomsSelect.value, 10);
     filterOptions.guests = parseInt(guestsSelect.value, 10);
-    filterOptions.features = featuresFieldset.querySelectorAll('input:checked'); // заменить
+    filterOptions.features = [];
+    for (var i = 0; i <= features.length; i++) {
+      filterOptions.features.push(features[i].value);
+    }
   };
 
   var updateAdvertisements = function (data) {
@@ -74,16 +72,9 @@
     // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
       if (filterOptions[key] === 'any' || !filterOptions[key]) {
         return;
-      } else {
-        for (var filterOption in filterOptions) {
-          var option = filterOptions[filterOption];
-          if (option === 'price'){
-            var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
-            return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
-          }
-        }
+      } else if (filterOptions[key] === 'price') {
+        return; // заменить!!!
       }
-
       // иначе начинаем проходить циклом по нашему массиву с данными
       data = data.filter(function (item) { // отсортированный массив!
         // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
@@ -94,11 +85,11 @@
     updateAdvertisements(data);
   };
 
-  var getCheckedInputValues = function() {
+  /* var getCheckedInputValues = function() {
     return Array.from(featuresFieldset.querySelectorAll('input:checked').map(function(item) {
       return item.value;
     }))
-  };
+  };*/
 
   form.addEventListener('change', function () {
     updateFilterOptions();
