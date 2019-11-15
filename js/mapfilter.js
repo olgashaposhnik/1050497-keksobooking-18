@@ -13,6 +13,9 @@
   var features = featuresFieldset.querySelectorAll('input');
   var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
   var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!
+  var errorTemplate = document.querySelector('#error');
+  var errorMessage = errorTemplate.content.querySelector('.error');
+  var mainBlock = errorTemplate.content.querySelector('.main');
   var PriceRange = {
     LOW: {
       MIN: 0,
@@ -62,6 +65,7 @@
     filterOptions.features = getCheckedInputValues();
     console.log(filterOptions.features);
   };
+  console.log(updateFilterOptions());
 
   var updateAdvertisements = function (data) {
     var fragment = document.createDocumentFragment();
@@ -100,6 +104,6 @@
   form.addEventListener('change', function () {
     updateFilterOptions();
     // после того, как обновили - запускам загрузку данных с сервера, и при успешной загрузке - фильтруем их
-    window.load.pageLoad(filterData);
+    window.backend.load(filterData);
   });
 })();
