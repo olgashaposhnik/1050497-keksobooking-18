@@ -27,25 +27,24 @@
   var classRemove = function (element, className) {
     element.classList.remove(className);
   };
-  /*
-  var updateAdvertisements  = function () {
-    window.render(wizards);
-  }*/
 
   var onSuccessLoad = function (data) {
     advertisements = data;
-    var fragment = document.createDocumentFragment();
-
-    for (var m = 0; m < advertisements.length; m++) {
-      var advertisementItem = window.pin.create(advertisements[m]);
-      fragment.appendChild(advertisementItem);
-    }
-    advertisementList.appendChild(fragment);
+    createAdvertisements(data);
   };
 
   var onErrorLoad = function () {
     var Error = errorMessage.cloneNode(true);
     mainBlock.insertAdjacentElement('afterbegin', Error);
+  };
+
+  var createAdvertisements = function () {
+    var fragment = document.createDocumentFragment();
+    for (var m = 0; m < advertisements.length; m++) {
+      var advertisementItem = window.pin.create(advertisements[m]);
+      fragment.appendChild(advertisementItem);
+    }
+    advertisementList.appendChild(fragment);
   };
 
   var getMapPinMainAddress = function () {
@@ -83,7 +82,7 @@
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
 
-  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на энтер
+  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на enter
     if (evt.keyCode === ENTER_KEYCODE) {
       onMapPinMainClick();
     }
@@ -151,7 +150,7 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    window.load.page(onSuccessLoad, onErrorLoad);
+    window.backend.load(onSuccessLoad, onErrorLoad);
   });
 
   window.map = {
