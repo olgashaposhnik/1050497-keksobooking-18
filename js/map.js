@@ -10,6 +10,8 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
+  var successTemplate = document.querySelector('#success');
+  var successMessage = successTemplate.content.querySelector('.success');
   var mainBlock = errorTemplate.content.querySelector('.main');
   var advertisements = [];
   var screenIndent = 70;
@@ -34,8 +36,8 @@
   };
 
   var onErrorLoad = function () {
-    var Error = errorMessage.cloneNode(true);
-    mainBlock.insertAdjacentElement('afterbegin', Error);
+    var error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', error);
   };
 
   var createAdvertisements = function () {

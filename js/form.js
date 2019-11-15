@@ -12,6 +12,8 @@
   var timeout = document.querySelector('#timeout');
   var mapPinMain = document.querySelector('.map__pin--main');
   var adress = document.querySelector('#address');
+  var successTemplate = document.querySelector('#success');
+  var successMessage = successTemplate.content.querySelector('.success');
   var capacityOptionsTrue = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -124,6 +126,8 @@
     document.querySelectorAll('.map__pin:not(.map__pin—main)').remove();
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
+    var success = successMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', success);
   };
 
   type.addEventListener('change', onTypeSelectChange);
@@ -138,7 +142,7 @@
   });
 
   adForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(adForm), onFormSubmitClick);
+    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
     evt.preventDefault();
   });
 
