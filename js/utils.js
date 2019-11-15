@@ -33,9 +33,8 @@
     return valueNumbers;
   };
 
-  var onEscDown = function (evt) {
+  var onEscDown = function (evt, popup) {
     if (evt.keyCode === ESC_KEYCODE) {
-      var popup = document.querySelector('.map__card.popup');
       popup.remove();
     }
   };
