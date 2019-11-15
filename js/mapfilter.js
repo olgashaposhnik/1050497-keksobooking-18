@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  /* var PINS_LIMIT = 5;*/
+  var PINS_LIMIT = 5;
   var filters = document.querySelector('.map__filters');
   /* var filterSelects = filters.querySelectorAll('select');
   var filterInputs = filters.querySelectorAll('input');*/
@@ -10,10 +10,10 @@
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
-  /* var features = featuresFieldset.querySelectorAll('input');*/
+  var features = featuresFieldset.querySelectorAll('input');
   var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
   var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!
-  /* var PriceRange = {
+  var PriceRange = {
     LOW: {
       MIN: 0,
       MAX: 10000
@@ -26,7 +26,7 @@
       MIN: 50000,
       MAX: Infinity
     }
-  };*/
+  };
   var form = document.querySelector('form');
   var filterOptions = {
     type: null,
@@ -42,16 +42,17 @@
     });
   };
 
-  /* var getFilterPrice = function (data) {
+  var getFilterPrice = function (data) {
     var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
     return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
-  };*/
+  };
 
   var getCheckedInputValues = function () {
     return Array.from(checkedFeatures).map(function (item) {
       return item.value;
     });
   };
+  console.log(getCheckedInputValues());
 
   var updateFilterOptions = function () {
     filterOptions.type = typeSelect.value;
@@ -59,6 +60,7 @@
     filterOptions.rooms = parseInt(roomsSelect.value, 10);
     filterOptions.guests = parseInt(guestsSelect.value, 10);
     filterOptions.features = getCheckedInputValues();
+    console.log(filterOptions.features);
   };
 
   var updateAdvertisements = function (data) {
