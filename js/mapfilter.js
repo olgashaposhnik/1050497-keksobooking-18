@@ -10,8 +10,8 @@
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
-  var features = featuresFieldset.querySelectorAll('input');
-  /* var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');*/
+  /* var features = featuresFieldset.querySelectorAll('input');*/
+  var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
   var advertisementList = document.querySelector('.map__pins'); // УДАЛИТЬ!!!!
   /* var PriceRange = {
     LOW: {
@@ -47,15 +47,18 @@
     return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
   };*/
 
+  var getCheckedInputValues = function () {
+    return Array.from(checkedFeatures).map(function (item) {
+      return item.value;
+    });
+  };
+
   var updateFilterOptions = function () {
     filterOptions.type = typeSelect.value;
     filterOptions.price = priceSelect.value;
     filterOptions.rooms = parseInt(roomsSelect.value, 10);
     filterOptions.guests = parseInt(guestsSelect.value, 10);
-    filterOptions.features = [];
-    for (var i = 0; i <= features.length; i++) {
-      filterOptions.features.push(features[i].value);
-    }
+    filterOptions.features = getCheckedInputValues();
   };
 
   var updateAdvertisements = function (data) {
@@ -72,10 +75,17 @@
     // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
       if (filterOptions[key] === 'any' || !filterOptions[key]) {
         return;
-      } else if (filterOptions[key] === 'price') {
-        return; // заменить!!!
-      }
-      // иначе начинаем проходить циклом по нашему массиву с данными
+      /* }  else if (filterOptions[key] === 'price') {
+        data = data.filter(function (item) { // отсортированный массив!
+          var filterPrice = PriceRange[filterOptions[key].toUpperCase()];
+          console.log(filterPrice);
+          return filterPrice >= PriceRange.MIN && item.offer[key] <= PriceRange.MAX;
+        });*/
+      } else if (filterOptions[key] === 'features') {
+        data = data.filter(function (item) {
+          return item.offer[key].includes(filterOptions[key]);
+        });
+      } // иначе начинаем проходить циклом по нашему массиву с данными
       data = data.filter(function (item) { // отсортированный массив!
         // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
         return item.offer[key] === filterOptions[key];
@@ -84,12 +94,6 @@
     cleanAdvertisementList();
     updateAdvertisements(data);
   };
-
-  /* var getCheckedInputValues = function() {
-    return Array.from(featuresFieldset.querySelectorAll('input:checked').map(function(item) {
-      return item.value;
-    }))
-  };*/
 
   form.addEventListener('change', function () {
     updateFilterOptions();

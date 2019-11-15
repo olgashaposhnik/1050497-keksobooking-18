@@ -28,6 +28,16 @@
     element.classList.remove(className);
   };
 
+  var onSuccessLoad = function (data) {
+    advertisements = data;
+    createAdvertisements(data);
+  };
+
+  var onErrorLoad = function () {
+    var Error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', Error);
+  };
+
   var createAdvertisements = function () {
     var fragment = document.createDocumentFragment();
     for (var m = 0; m < advertisements.length; m++) {
@@ -35,16 +45,6 @@
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
-  };
-
-  var onSuccessLoad = function (data) {
-    advertisements = data;
-    createAdvertisements();
-  };
-
-  var onErrorLoad = function () {
-    var Error = errorMessage.cloneNode(true);
-    mainBlock.insertAdjacentElement('afterbegin', Error);
   };
 
   var getMapPinMainAddress = function () {
@@ -150,7 +150,7 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    window.load.pageLoad(onSuccessLoad, onErrorLoad);
+    window.backend.load(onSuccessLoad, onErrorLoad);
   });
 
   window.map = {
