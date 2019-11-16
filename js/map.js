@@ -29,20 +29,20 @@
     WIDTH: document.querySelector('.map__pin').offsetWidth,
     HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
   };
-  var PriceRange = {
-    LOW: {
-      MIN: 0,
-      MAX: 10000
-    },
-    MIDDLE: {
-      MIN: 10000,
-      MAX: 50000
-    },
-    HIGH: {
-      MIN: 50000,
-      MAX: Infinity
-    }
-  };
+  // var PriceRange = {
+  //   LOW: {
+  //     MIN: 0,
+  //     MAX: 10000
+  //   },
+  //   MIDDLE: {
+  //     MIN: 10000,
+  //     MAX: 50000
+  //   },
+  //   HIGH: {
+  //     MIN: 50000,
+  //     MAX: Infinity
+  //   }
+  // };
   var filterOptions = {
     type: null,
     price: null,
@@ -57,8 +57,8 @@
 
   var onSuccessLoad = function (data) {
     advertisements = data;
-    // filteredData();
-    createAdvertisements(data);
+    filteredData(data);
+    // createAdvertisements(data);
   };
 
   var onErrorLoad = function () {
@@ -113,10 +113,10 @@
     });
   };
 
-  var getFilterPrice = function (data) {
-    var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
-    return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
-  };
+  // var getFilterPrice = function (data) {
+  //   var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
+  //   return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
+  // };
 
   var getCheckedInputValues = function () {
     var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
@@ -133,15 +133,15 @@
     filterOptions.features = getCheckedInputValues();
   };
 
-  var filteredData = function () { // функция, которая фильтрует объявления
+  var filteredData = function (data) { // функция, которая фильтрует объявления
     // var data = advertisements.slice(0, PINS_LIMIT); // оставляет 5 пинов из выборки
-    var data = advertisements; // все данные, которые пришли с сервера, заносим в переменную
+    // var data = advertisements; // все данные, которые пришли с сервера, заносим в переменную
     Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
     // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
       if (filterOptions[key] === 'any' || !filterOptions[key]) {
         return;
-      } else if (filterOptions[key] === 'type' || filterOptions[key] === 'rooms' || filterOptions[key] === 'guests') { // если изменения были в соответствующих селектах
-        var filterAdv = filterAdv.filter(function (item) { // фильтруем массив!
+      } else if (key === 'type' || key === 'rooms' || key === 'guests') { // если изменения были в соответствующих селектах
+        data = data.filter(function (item) { // фильтруем массив!
           return item.offer[key] === filterOptions[key]; // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
         });
       }
@@ -161,40 +161,14 @@
       //   return item.offer[key] === filterOptions[key];
       // });
     });
-    createAdvertisements(data);
+    cleanAdvertisementList();
+    createAdvertisements(data.slice(0, PINS_LIMIT));
   };
-
-  // var filterData = function () {
-  //   var advertisements = window.mapFilter.data;
-  //   window.map.createAdvertisements(advertisements);
-  //   Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
-  //   // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
-  //     if (filterOptions[key] === 'any' || !filterOptions[key]) {
-  //       return;
-  //     /* }  else if (filterOptions[key] === 'price') {
-  //       data = data.filter(function (item) { // отсортированный массив!
-  //         var filterPrice = PriceRange[filterOptions[key].toUpperCase()];
-  //         console.log(filterPrice);
-  //         return filterPrice >= PriceRange.MIN && item.offer[key] <= PriceRange.MAX;
-  //       });*/
-  //     } else if (filterOptions[key] === 'features') {
-  //       data = data.filter(function (item) {
-  //         return item.offer[key].includes(filterOptions[key]);
-  //       });
-  //     } // иначе начинаем проходить циклом по нашему массиву с данными
-  //     data = data.filter(function (item) { // отсортированный массив!
-  //       // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
-  //       return item.offer[key] === filterOptions[key];
-  //     });
-  //   });
-  //   cleanAdvertisementList();
-  //   updateAdvertisements(data);
-  // };
 
   mapFilters.addEventListener('change', function () { // добавляем обработчик события изменения формы
     updateFilterOptions();
     // после того, как обновили - запускам загрузку данных с сервера, и при успешной загрузке - фильтруем их
-    window.backend.load(filteredData);
+    window.backend.load(filteredData, onErrorLoad);
   });
 
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
