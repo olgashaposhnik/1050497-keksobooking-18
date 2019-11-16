@@ -9,16 +9,9 @@
   var mapPinTemplate = document.querySelector('#pin');
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
-  var mapCard = function () {
-    return document.querySelector('.map_card');
-  };
-
   var onButtonPinClick = function (evt) {
     var optionsObject = evt.currentTarget._options;
     var advertisementCard = window.card.create(optionsObject);
-    if (mapCard()) {
-      mapCard().remove();
-    }
     mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
   };
 
@@ -30,7 +23,6 @@
     buttonItem.querySelector('img').alt = resultObject.offer.title;
     mapPin._options = resultObject;
     mapPin.addEventListener('click', onButtonPinClick);
-    document.addEventListener('keydown', window.utils.onEscDown);
     return buttonItem;
   };
 

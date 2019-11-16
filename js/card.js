@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_REYKODE = 27;
   var typesKey = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -32,8 +33,16 @@
 
   var popupClose = function () {
     var popup = document.querySelector('.map__card.popup');
-    popup.remove();
-    document.removeEventListener('click', window.utils.onEscDown);
+    if (popup) {
+      popup.remove();
+      document.removeEventListener('keydown', onEscDown);
+    }
+  };
+
+  var onEscDown = function (evt) {
+    if (evt.keykode === ESC_REYKODE) {
+      popupClose();
+    }
   };
 
   var createCard = function (resultObject) { // клонирует пины из card
@@ -52,6 +61,7 @@
     cardItem.querySelector('.popup__avatar').src = resultObject.author.avatar;
     var closeCard = cardItem.querySelector('.popup__close');
     closeCard.addEventListener('click', popupClose);
+    document.addEventListener('keydown', onEscDown);
     return cardItem.firstElementChild;
   };
 
