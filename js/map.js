@@ -17,7 +17,6 @@
   var roomsSelect = filters.querySelector('#housing-rooms');
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
-  var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
   var advertisements = [];
   var screenIndent = 70;
   var screenParams = {
@@ -58,8 +57,8 @@
 
   var onSuccessLoad = function (data) {
     advertisements = data;
-    filteredData();
-    // createAdvertisements(data);
+    // filteredData();
+    createAdvertisements(data);
   };
 
   var onErrorLoad = function () {
@@ -74,7 +73,7 @@
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
-    cleanAdvertisementList(); // очищаем карту от ранее созданных пинов
+    // cleanAdvertisementList(); // очищаем карту от ранее созданных пинов
   };
 
   var getMapPinMainAddress = function () {
@@ -120,11 +119,11 @@
   };
 
   var getCheckedInputValues = function () {
+    var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
     return Array.from(checkedFeatures).map(function (item) {
       return item.value;
     });
   };
-  console.log(getCheckedInputValues());
 
   var updateFilterOptions = function () {
     filterOptions.type = typeSelect.value;
@@ -132,38 +131,37 @@
     filterOptions.rooms = parseInt(roomsSelect.value, 10);
     filterOptions.guests = parseInt(guestsSelect.value, 10);
     filterOptions.features = getCheckedInputValues();
-    console.log(getCheckedInputValues());
-    console.log(filterOptions.features);
   };
 
-  var selectFiltration = function (select, item, key) {
-    return select.value === 'any' ? true : select.value === item[key];
-  };
-
-
-  var filteredData = function () {
-    var data = advertisements.slice(0, PINS_LIMIT);
-    createAdvertisements(data);
+  var filteredData = function () { // функция, которая фильтрует объявления
+    // var data = advertisements.slice(0, PINS_LIMIT); // оставляет 5 пинов из выборки
+    var data = advertisements; // все данные, которые пришли с сервера, заносим в переменную
     Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
     // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
       if (filterOptions[key] === 'any' || !filterOptions[key]) {
         return;
+      } else if (filterOptions[key] === 'type' || filterOptions[key] === 'rooms' || filterOptions[key] === 'guests') { // если изменения были в соответствующих селектах
+        var filterAdv = filterAdv.filter(function (item) { // фильтруем массив!
+          return item.offer[key] === filterOptions[key]; // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
+        });
+      }
       /* }  else if (filterOptions[key] === 'price') {
         data = data.filter(function (item) { // отсортированный массив!
           var filterPrice = PriceRange[filterOptions[key].toUpperCase()];
           console.log(filterPrice);
           return filterPrice >= PriceRange.MIN && item.offer[key] <= PriceRange.MAX;
-        });*/
+        });
       } else if (filterOptions[key] === 'features') {
         data = data.filter(function (item) {
           return item.offer[key].includes(filterOptions[key]);
-        });
-      } // иначе начинаем проходить циклом по нашему массиву с данными
-      data = data.filter(function (item) { // отсортированный массив!
-        // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
-        return item.offer[key] === filterOptions[key];
-      });
+        });*/
+      // } иначе начинаем проходить циклом по нашему массиву с данными
+      // var data = data.filter(function (item) { // отсортированный массив!
+      //   // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
+      //   return item.offer[key] === filterOptions[key];
+      // });
     });
+    createAdvertisements(data);
   };
 
   // var filterData = function () {
