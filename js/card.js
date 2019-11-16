@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var typesKey = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -32,11 +33,20 @@
 
   var popupClose = function () {
     var popup = document.querySelector('.map__card.popup');
-    popup.remove();
-    document.removeEventListener('click', window.utils.onEscDown);
+    if (popup) {
+      popup.remove();
+      document.removeEventListener('keydown', onEscDown);
+    }
+  };
+
+  var onEscDown = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      popupClose();
+    }
   };
 
   var createCard = function (resultObject) { // клонирует пины из card
+    popupClose();
     var cardItem = cardTemplate.content.cloneNode(true);
     cardItem.querySelector('.popup__title').textContent = resultObject.offer.title;
     cardItem.querySelector('.popup__text--address').textContent = resultObject.offer.address;
@@ -52,6 +62,7 @@
     cardItem.querySelector('.popup__avatar').src = resultObject.author.avatar;
     var closeCard = cardItem.querySelector('.popup__close');
     closeCard.addEventListener('click', popupClose);
+    document.addEventListener('keydown', onEscDown);
     return cardItem.firstElementChild;
   };
 

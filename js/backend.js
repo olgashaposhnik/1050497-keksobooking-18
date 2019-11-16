@@ -8,7 +8,7 @@
   var SUCCESS_SERVER_CODE = 200;
   var TIMEOUT = 10000;
 
-  var request = function (method, url, onSuccess, onError) {
+  var getRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
@@ -25,16 +25,19 @@
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
     xhr.timeout = TIMEOUT; // 10s
-    xhr.open(method, url);
     return xhr;
   };
 
   var load = function (onSuccess, onError) {
-    request('GET', URL.LOAD, onSuccess, onError).send();
+    var xhr = getRequest(onSuccess, onError);
+    xhr.open('GET', URL.LOAD);
+    xhr.send();
   };
 
   var upload = function (onSuccess, onError, data) {
-    request('POST', URL.UPLOAD, onSuccess, onError).send(data);
+    var xhr = getRequest(onSuccess, onError);
+    xhr.open('POST', URL.UPLOAD);
+    xhr.send(data);
   };
 
   window.backend = {

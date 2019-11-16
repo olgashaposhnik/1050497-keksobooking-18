@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  var ENTER_KEYCODE = 13;
   var PIN_HEIGHT_BEFORE = 22;
+  var PINS_LIMIT = 5;
   var advertisementList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
@@ -11,6 +11,13 @@
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
   var mainBlock = errorTemplate.content.querySelector('.main');
+  var filters = document.querySelector('.map__filters');
+  var typeSelect = filters.querySelector('#housing-type');
+  var priceSelect = filters.querySelector('#housing-price');
+  var roomsSelect = filters.querySelector('#housing-rooms');
+  var guestsSelect = filters.querySelector('#housing-guests');
+  var featuresFieldset = filters.querySelector('#housing-features');
+  var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
   var advertisements = [];
   var screenIndent = 70;
   var screenParams = {
@@ -23,6 +30,27 @@
     WIDTH: document.querySelector('.map__pin').offsetWidth,
     HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
   };
+  var PriceRange = {
+    LOW: {
+      MIN: 0,
+      MAX: 10000
+    },
+    MIDDLE: {
+      MIN: 10000,
+      MAX: 50000
+    },
+    HIGH: {
+      MIN: 50000,
+      MAX: Infinity
+    }
+  };
+  var filterOptions = {
+    type: null,
+    price: null,
+    rooms: null,
+    guests: null,
+    features: null
+  };
 
   var classRemove = function (element, className) {
     element.classList.remove(className);
@@ -30,7 +58,8 @@
 
   var onSuccessLoad = function (data) {
     advertisements = data;
-    createAdvertisements(data);
+    filteredData();
+    // createAdvertisements(data);
   };
 
   var onErrorLoad = function () {
@@ -38,13 +67,14 @@
     mainBlock.insertAdjacentElement('afterbegin', Error);
   };
 
-  var createAdvertisements = function () {
+  var createAdvertisements = function (items) {
     var fragment = document.createDocumentFragment();
-    for (var m = 0; m < advertisements.length; m++) {
-      var advertisementItem = window.pin.create(advertisements[m]);
+    for (var m = 0; m < items.length; m++) {
+      var advertisementItem = window.pin.create(items[m]);
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
+    cleanAdvertisementList(); // очищаем карту от ранее созданных пинов
   };
 
   var getMapPinMainAddress = function () {
@@ -69,6 +99,7 @@
       mapFiltersSelect[l].removeAttribute('disabled');
     }
     window.form.setAddress(getMapPinMainAddress());
+    window.backend.load(onSuccessLoad, onErrorLoad);
   };
 
   var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
@@ -77,17 +108,101 @@
     }
   };
 
+  var cleanAdvertisementList = function () { // функция, которая очищает область от старых пинов
+    Array.from(advertisementList.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
+      item.remove();
+    });
+  };
+
+  var getFilterPrice = function (data) {
+    var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
+    return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
+  };
+
+  var getCheckedInputValues = function () {
+    return Array.from(checkedFeatures).map(function (item) {
+      return item.value;
+    });
+  };
+  console.log(getCheckedInputValues());
+
+  var updateFilterOptions = function () {
+    filterOptions.type = typeSelect.value;
+    filterOptions.price = priceSelect.value;
+    filterOptions.rooms = parseInt(roomsSelect.value, 10);
+    filterOptions.guests = parseInt(guestsSelect.value, 10);
+    filterOptions.features = getCheckedInputValues();
+    console.log(getCheckedInputValues());
+    console.log(filterOptions.features);
+  };
+
+  var selectFiltration = function (select, item, key) {
+    return select.value === 'any' ? true : select.value === item[key];
+  };
+
+
+  var filteredData = function () {
+    var data = advertisements.slice(0, PINS_LIMIT);
+    createAdvertisements(data);
+    Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
+    // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
+      if (filterOptions[key] === 'any' || !filterOptions[key]) {
+        return;
+      /* }  else if (filterOptions[key] === 'price') {
+        data = data.filter(function (item) { // отсортированный массив!
+          var filterPrice = PriceRange[filterOptions[key].toUpperCase()];
+          console.log(filterPrice);
+          return filterPrice >= PriceRange.MIN && item.offer[key] <= PriceRange.MAX;
+        });*/
+      } else if (filterOptions[key] === 'features') {
+        data = data.filter(function (item) {
+          return item.offer[key].includes(filterOptions[key]);
+        });
+      } // иначе начинаем проходить циклом по нашему массиву с данными
+      data = data.filter(function (item) { // отсортированный массив!
+        // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
+        return item.offer[key] === filterOptions[key];
+      });
+    });
+  };
+
+  // var filterData = function () {
+  //   var advertisements = window.mapFilter.data;
+  //   window.map.createAdvertisements(advertisements);
+  //   Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
+  //   // если выбрано значение 'any' или у нас получился какой-нибудь NaN или просто неопределенное значение - пропускаем ход
+  //     if (filterOptions[key] === 'any' || !filterOptions[key]) {
+  //       return;
+  //     /* }  else if (filterOptions[key] === 'price') {
+  //       data = data.filter(function (item) { // отсортированный массив!
+  //         var filterPrice = PriceRange[filterOptions[key].toUpperCase()];
+  //         console.log(filterPrice);
+  //         return filterPrice >= PriceRange.MIN && item.offer[key] <= PriceRange.MAX;
+  //       });*/
+  //     } else if (filterOptions[key] === 'features') {
+  //       data = data.filter(function (item) {
+  //         return item.offer[key].includes(filterOptions[key]);
+  //       });
+  //     } // иначе начинаем проходить циклом по нашему массиву с данными
+  //     data = data.filter(function (item) { // отсортированный массив!
+  //       // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
+  //       return item.offer[key] === filterOptions[key];
+  //     });
+  //   });
+  //   cleanAdvertisementList();
+  //   updateAdvertisements(data);
+  // };
+
+  mapFilters.addEventListener('change', function () { // добавляем обработчик события изменения формы
+    updateFilterOptions();
+    // после того, как обновили - запускам загрузку данных с сервера, и при успешной загрузке - фильтруем их
+    window.backend.load(filteredData);
+  });
+
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
   mapFiltersSelectDisabled();
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
-
-  mapPinMain.addEventListener('click', function (evt) { // переводим страницу в активный режим при нажатии на enter
-    if (evt.keyCode === ENTER_KEYCODE) {
-      onMapPinMainClick();
-    }
-    mapPinMain.removeEventListener('click', onMapPinMainClick);
-  });
 
   mapPinMain.addEventListener('mousedown', function (evt) {
     evt.preventDefault();
@@ -150,13 +265,13 @@
 
     document.addEventListener('mousemove', onMouseMove);
     document.addEventListener('mouseup', onMouseUp);
-    window.backend.load(onSuccessLoad, onErrorLoad);
   });
 
   window.map = {
     getMainAddress: getMapPinMainAddress,
     getAddress: getMapPinAddress,
     deactivate: deactivateMap,
-    mapFiltersSelectDisabled: mapFiltersSelectDisabled
+    mapFiltersSelectDisabled: mapFiltersSelectDisabled,
+    createAdvertisements: createAdvertisements
   };
 })();
