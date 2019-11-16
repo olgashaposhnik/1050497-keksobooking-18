@@ -34,8 +34,8 @@
   };
 
   var onErrorLoad = function () {
-    var Error = errorMessage.cloneNode(true);
-    mainBlock.insertAdjacentElement('afterbegin', Error);
+    var error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', error);
   };
 
   var createAdvertisements = function () {

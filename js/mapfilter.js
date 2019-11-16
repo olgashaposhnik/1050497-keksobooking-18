@@ -98,6 +98,6 @@
   form.addEventListener('change', function () {
     updateFilterOptions();
     // после того, как обновили - запускам загрузку данных с сервера, и при успешной загрузке - фильтруем их
-    window.load.pageLoad(filterData);
+    window.backend.load(filterData);
   });
 })();

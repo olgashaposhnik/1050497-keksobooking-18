@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var roomNumber = document.querySelector('#room_number');
   var adForm = document.querySelector('.ad-form');
   var adFormFieldset = adForm.querySelectorAll('fieldset');
@@ -12,6 +13,13 @@
   var timeout = document.querySelector('#timeout');
   var mapPinMain = document.querySelector('.map__pin--main');
   var adress = document.querySelector('#address');
+  var successTemplate = document.querySelector('#success');
+  var successMessage = successTemplate.content.querySelector('.success');
+  var success = successMessage.cloneNode(true);
+  var errorTemplate = document.querySelector('#error');
+  var errorMessage = errorTemplate.content.querySelector('.error');
+  var errorClose = errorTemplate.content.querySelector('.error__button');
+  var mainBlock = document.querySelector('main');
   var capacityOptionsTrue = {
     '1': ['1'],
     '2': ['1', '2'],
@@ -114,6 +122,19 @@
     }
   };
 
+  var successMessageClose = function () {
+    if (success) {
+      success.remove();
+      document.removeEventListener('keydown', onEscDown);
+    }
+  };
+
+  var onEscDown = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      successMessageClose();
+    }
+  };
+
   var onFormSubmitClick = function () {
     window.map.deactivate();
     adForm.classList.add('ad-form--disabled');
@@ -121,9 +142,28 @@
       adFormFieldset[j].classList.add('disabled');
     }
     window.map.mapFiltersSelectDisabled();
-    document.querySelectorAll('.map__pin:not(.map__pin—main)').remove();
+    Array.from(document.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
+      item.remove();
+    });
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
+    mainBlock.insertAdjacentElement('afterbegin', success);
+    success.addEventListener('click', function () {
+      success.remove();
+    });
+    document.addEventListener('keydown', onEscDown);
+  };
+
+  var onSubmitError = function () {
+    var error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', error);
+    errorClose.addEventListener('click', function () {
+      error.remove();
+    });
+    error.addEventListener('click', function () {
+      error.remove();
+    });
+    document.addEventListener('keydown', onEscDown);
   };
 
   type.addEventListener('change', onTypeSelectChange);
@@ -138,10 +178,8 @@
   });
 
   adForm.addEventListener('submit', function (evt) {
-    window.backend.upload(new FormData(adForm), function (/* response*/) {
-      onFormSubmitClick();
-    });
     evt.preventDefault();
+    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
   });
 
   window.form = {
