@@ -45,7 +45,7 @@
     }
   };
 
-  var createCard = function (resultObject) { // клонирует пины из card
+  var createCard = function (resultObject) { // клонирует пины из модуля card
     popupClose();
     var cardItem = cardTemplate.content.cloneNode(true);
     cardItem.querySelector('.popup__title').textContent = resultObject.offer.title;
