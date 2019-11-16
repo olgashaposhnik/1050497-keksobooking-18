@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var ESC_KEYCODE = 27;
   var roomNumber = document.querySelector('#room_number');
   var adForm = document.querySelector('.ad-form');
   var adFormFieldset = adForm.querySelectorAll('fieldset');
@@ -14,6 +15,7 @@
   var adress = document.querySelector('#address');
   var successTemplate = document.querySelector('#success');
   var successMessage = successTemplate.content.querySelector('.success');
+  var success = successMessage.cloneNode(true);
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
   var errorClose = errorTemplate.content.querySelector('.error__button');
@@ -120,6 +122,19 @@
     }
   };
 
+  var successMessageClose = function () {
+    if (success) {
+      success.remove();
+      document.removeEventListener('keydown', onEscDown);
+    }
+  };
+
+  var onEscDown = function (evt) {
+    if (evt.keyCode === ESC_KEYCODE) {
+      successMessageClose();
+    }
+  };
+
   var onFormSubmitClick = function () {
     window.map.deactivate();
     adForm.classList.add('ad-form--disabled');
@@ -127,17 +142,16 @@
       adFormFieldset[j].classList.add('disabled');
     }
     window.map.mapFiltersSelectDisabled();
-    Array.from(document.querySelectorAll('.map__pin:not(.map__pin—main)')).forEach(function (item) {
+    Array.from(document.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
       item.remove();
     });
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
-    var success = successMessage.cloneNode(true);
     mainBlock.insertAdjacentElement('afterbegin', success);
     success.addEventListener('click', function () {
       success.remove();
     });
-    document.addEventListener('keydown', window.utils.onEscDown); // НЕ РАБОТАЕТ
+    document.addEventListener('keydown', onEscDown);
   };
 
   var onSubmitError = function () {
@@ -149,7 +163,7 @@
     error.addEventListener('click', function () {
       error.remove();
     });
-    document.addEventListener('keydown', window.utils.onEscDown); // НЕ РАБОТАЕТ
+    document.addEventListener('keydown', onEscDown);
   };
 
   type.addEventListener('change', onTypeSelectChange);
