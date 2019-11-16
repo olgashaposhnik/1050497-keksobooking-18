@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var ESC_REYKODE = 27;
+  var ESC_KEYCODE = 27;
   var typesKey = {
     palace: 'Дворец',
     flat: 'Квартира',
@@ -40,7 +40,7 @@
   };
 
   var onEscDown = function (evt) {
-    if (evt.keykode === ESC_REYKODE) {
+    if (evt.keyCode === ESC_KEYCODE) {
       popupClose();
     }
   };
