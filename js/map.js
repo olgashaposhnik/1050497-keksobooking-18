@@ -164,9 +164,9 @@
       if (filterOptions[key] === 'any' || !filterOptions[key]) {
         return;
       } else if (key === 'price') {
-        var filterPrice = filterOptions[key].toUpperCase(); // перевели значение выбранного фильтра в верхний регистр
+        var filteredPrice = filterOptions[key].toUpperCase(); // перевели значение выбранного фильтра в верхний регистр
         data = data.filter(function (item) {
-          return item.offer[key] >= PriceRange[filterPrice].MIN && item.offer[key] <= PriceRange[filterPrice].MAX;
+          return item.offer[key] >= PriceRange[filteredPrice].MIN && item.offer[key] <= PriceRange[filteredPrice].MAX;
         });
       }
     });
