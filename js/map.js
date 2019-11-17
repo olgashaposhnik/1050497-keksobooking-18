@@ -141,14 +141,24 @@
         });
       } else if (key === 'features') {
         data = data.filter(function (item) {
-          console.log('запустилась')
-          return item.offer[key] === filterOptions[key].every( // для каждого элемента в filterOptions.features
+          console.log('работает')
+          return filterOptions[key].every(
               function (adv) {
-                console.log('запустилась 2')
-                return adv.offer[key].includes(filterOptions[key]); // этот элемент находится в adv.offer.features
+                return item.offer[key].includes(adv[key]);
               }
           );
         });
+
+      // else if (key === 'features') {
+      //   data = data.filter(function (item) {
+      //     console.log('запустилась')
+      //     return item.offer[key] === filterOptions[key].every( // для каждого элемента в filterOptions.features
+      //         function (adv) {
+      //           console.log('запустилась 2')
+      //           return adv.offer[key].includes(filterOptions[key]); // этот элемент находится в adv.offer.features
+      //         }
+      //     );
+      //   });
 
 
         // filterOptions[key].every( // отбираем все объявления
