@@ -197,9 +197,9 @@
     //   }
     // });
     cleanAdvertisementList();
-    createAdvertisements(data.filter(function () {
+    window.utils.debounce(createAdvertisements(data.filter(function () {
       return filterSelects(data) && filterPrice(data) && filterFeatures(data);
-    }).slice(0, PINS_LIMIT));
+    }).slice(0, PINS_LIMIT)));
     // createAdvertisements((filterSelects(data)) && (filterPrice(data)) && (filterFeatures(data))).slice(0, PINS_LIMIT);
     // createAdvertisements(data.slice(0, PINS_LIMIT));
   };
