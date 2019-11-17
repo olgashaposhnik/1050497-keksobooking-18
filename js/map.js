@@ -29,20 +29,20 @@
     WIDTH: document.querySelector('.map__pin').offsetWidth,
     HEIGHT: document.querySelector('.map__pin').offsetHeight + PIN_HEIGHT_BEFORE
   };
-  // var PriceRange = {
-  //   LOW: {
-  //     MIN: 0,
-  //     MAX: 10000
-  //   },
-  //   MIDDLE: {
-  //     MIN: 10000,
-  //     MAX: 50000
-  //   },
-  //   HIGH: {
-  //     MIN: 50000,
-  //     MAX: Infinity
-  //   }
-  // };
+  var PriceRange = {
+    LOW: {
+      MIN: 0,
+      MAX: 10000
+    },
+    MIDDLE: {
+      MIN: 10000,
+      MAX: 50000
+    },
+    HIGH: {
+      MIN: 50000,
+      MAX: Infinity
+    }
+  };
   var filterOptions = {
     type: null,
     price: null,
@@ -113,11 +113,6 @@
     });
   };
 
-  // var getFilterPrice = function (data) {
-  //   var filterPrice = PriceRange[priceSelect.value.toUpperCase()]; // возвращает значение строки в верхний регистр
-  //   return filterPrice >= PriceRange.MIN && data.offer.price <= PriceRange.MAX;
-  // };
-
   var getCheckedInputValues = function () {
     var checkedFeatures = featuresFieldset.querySelectorAll('input:checked');
     return Array.from(checkedFeatures).map(function (item) {
@@ -143,6 +138,22 @@
       } else if (key === 'type' || key === 'rooms' || key === 'guests') { // если изменения были в соответствующих селектах
         data = data.filter(function (item) { // фильтруем массив!
           return item.offer[key] === filterOptions[key]; // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
+        });
+      } else if (key === 'features') {
+        filterOptions[key].every( // отбираем все объявления
+            data = data.filter(function (item) {
+              item.offer[key].includes(filterOptions[key]); // вернет true или false
+              return item.offer[key] === filterOptions[key]; // в которых
+            }));
+      // } else if (key === 'features') {
+      //   filterOptions[key].every(
+      //       data = data.filter(function (item) {
+      //         return item.offer[key].includes(filterOptions[key])
+      //       }));
+      } else if (key === 'price') {
+        var filterPrice = filterOptions[key].toUpperCase(); // перевели значение выбранного фильтра в верхний регистр
+        data = data.filter(function (item) {
+          return item.offer[key] >= PriceRange[filterPrice].MIN && item.offer[key] <= PriceRange[filterPrice].MAX;
         });
       }
       /* }  else if (filterOptions[key] === 'price') {
