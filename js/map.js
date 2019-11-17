@@ -140,11 +140,22 @@
           return item.offer[key] === filterOptions[key]; // и оставляем в нем только те объекты, которые совпадают с выбранными в фильтре данными
         });
       } else if (key === 'features') {
-        filterOptions[key].every( // отбираем все объявления
-            data = data.filter(function (item) {
-              item.offer[key].includes(filterOptions[key]); // вернет true или false
-              return item.offer[key] === filterOptions[key]; // в которых
-            }));
+        data = data.filter(function (item) {
+          console.log('запустилась')
+          return item.offer[key] === filterOptions[key].every( // для каждого элемента в filterOptions.features
+              function (adv) {
+                console.log('запустилась 2')
+                return adv.offer[key].includes(filterOptions[key]); // этот элемент находится в adv.offer.features
+              }
+          );
+        });
+
+
+        // filterOptions[key].every( // отбираем все объявления
+        //     data = data.filter(function (item) {
+        //       item.offer[key].includes(filterOptions[key]); // вернет true или false
+        //       return item.offer[key] === filterOptions[key]; // в которых
+        //     }));
       // } else if (key === 'features') {
       //   filterOptions[key].every(
       //       data = data.filter(function (item) {
