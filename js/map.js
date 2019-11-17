@@ -140,7 +140,6 @@
       }
     });
   };
-  console.log(filterSelects())
 
   var filterFeatures = function (data) {
     Object.keys(filterOptions).forEach(function (key) { // Object.keys(filterOptions - создает массив с ключами объекта filterOptions В нашем случае это будет ['type', 'rooms']. Проходимся в цикле по нашему массиву
@@ -198,7 +197,10 @@
     //   }
     // });
     cleanAdvertisementList();
-    createAdvertisements((filterSelects(data) && (filterPrice(data) && (filterFeatures(data)).slice(0, PINS_LIMIT));
+    createAdvertisements(data.filter(function () {
+      return filterSelects(data) && filterPrice(data) && filterFeatures(data);
+    }).slice(0, PINS_LIMIT));
+    // createAdvertisements((filterSelects(data)) && (filterPrice(data)) && (filterFeatures(data))).slice(0, PINS_LIMIT);
     // createAdvertisements(data.slice(0, PINS_LIMIT));
   };
 
