@@ -31,7 +31,7 @@
     return photosFragment;
   };
 
-  var popupClose = function () {
+  var closePopup = function () {
     var popup = document.querySelector('.map__card.popup');
     if (popup) {
       popup.remove();
@@ -41,12 +41,12 @@
 
   var onEscDown = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      popupClose();
+      closePopup();
     }
   };
 
   var createCard = function (resultObject) { // клонирует пины из модуля card
-    popupClose();
+    closePopup();
     var cardItem = cardTemplate.content.cloneNode(true);
     cardItem.querySelector('.popup__title').textContent = resultObject.offer.title;
     cardItem.querySelector('.popup__text--address').textContent = resultObject.offer.address;
@@ -61,13 +61,13 @@
     cardItem.querySelector('.popup__photos').appendChild(createPhotosFragment(resultObject));
     cardItem.querySelector('.popup__avatar').src = resultObject.author.avatar;
     var closeCard = cardItem.querySelector('.popup__close');
-    closeCard.addEventListener('click', popupClose);
+    closeCard.addEventListener('click', closePopup);
     document.addEventListener('keydown', onEscDown);
     return cardItem.firstElementChild;
   };
 
   window.card = {
     create: createCard,
-    popupClose: popupClose
+    closePopup: closePopup
   };
 })();

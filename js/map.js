@@ -6,7 +6,7 @@
   var advertisementList = document.querySelector('.map__pins');
   var map = document.querySelector('.map');
   var mapFilters = document.querySelector('.map__filters');
-  var mapFiltersSelect = mapFilters.querySelectorAll('select');
+  var mapFiltersSelects = mapFilters.querySelectorAll('select');
   var mapPinMain = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
@@ -18,10 +18,9 @@
   var guestsSelect = filters.querySelector('#housing-guests');
   var featuresFieldset = filters.querySelector('#housing-features');
   var advertisements = [];
-  var screenIndent = 70;
   var screenParams = {
-    MIN_WIDTH: 70,
-    MAX_WIDTH: document.querySelector('.map').offsetWidth - screenIndent,
+    MIN_WIDTH: 0,
+    MAX_WIDTH: document.querySelector('.map').offsetWidth,
     MIN_HEIGHT: 130,
     MAX_HEIGHT: 630,
   };
@@ -85,16 +84,16 @@
     // Удаляем у блока .map класс .map--faded
     classRemove(map, 'map--faded');
     window.form.activateAdForm();
-    for (var l = 0; l < mapFiltersSelect.length; l++) {
-      mapFiltersSelect[l].removeAttribute('disabled');
+    for (var l = 0; l < mapFiltersSelects.length; l++) {
+      mapFiltersSelects[l].removeAttribute('disabled');
     }
     window.form.setAddress(getMapPinMainAddress());
     window.backend.load(onSuccessLoad, onErrorLoad);
   };
 
-  var mapFiltersSelectDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
-    for (var m = 0; m < mapFiltersSelect.length; m++) {
-      mapFiltersSelect[m].setAttribute('disabled', 'disabled');
+  var mapFiltersSelectsDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
+    for (var m = 0; m < mapFiltersSelects.length; m++) {
+      mapFiltersSelects[m].setAttribute('disabled', 'disabled');
     }
   };
 
@@ -140,7 +139,7 @@
     }).slice(0, PINS_LIMIT);
     cleanAdvertisementList();
     createAdvertisements(data);
-    window.card.popupClose();
+    window.card.closePopup();
   });
 
   mapFilters.addEventListener('change', function () { // добавляем обработчик события изменения формы
@@ -148,7 +147,7 @@
   });
 
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
-  mapFiltersSelectDisabled();
+  mapFiltersSelectsDisabled();
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
 
@@ -176,10 +175,10 @@
         y: mapPinMain.offsetTop - shift.y
       };
       var moveLimit = {
-        LEFT: screenParams.MIN_WIDTH,
-        TOP: screenParams.MAX_HEIGHT,
-        RIGHT: screenParams.MAX_WIDTH - pinParams.WIDTH,
-        BOTTOM: screenParams.MIN_HEIGHT
+        LEFT: screenParams.MIN_WIDTH - pinParams.WIDTH / 2,
+        TOP: screenParams.MAX_HEIGHT - pinParams.HEIGHT,
+        RIGHT: screenParams.MAX_WIDTH - pinParams.WIDTH / 2,
+        BOTTOM: screenParams.MIN_HEIGHT - pinParams.HEIGHT
       };
       if (mapPinMainPosition.x >= moveLimit.LEFT && mapPinMainPosition.x <= moveLimit.RIGHT) {
         mapPinMain.style.left = mapPinMainPosition.x + 'px';
@@ -219,7 +218,7 @@
     getMainAddress: getMapPinMainAddress,
     getAddress: getMapPinAddress,
     deactivate: deactivateMap,
-    mapFiltersSelectDisabled: mapFiltersSelectDisabled,
+    mapFiltersSelectsDisabled: mapFiltersSelectsDisabled,
     createAdvertisements: createAdvertisements
   };
 })();

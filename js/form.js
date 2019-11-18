@@ -4,7 +4,7 @@
   var ESC_KEYCODE = 27;
   var roomNumber = document.querySelector('#room_number');
   var adForm = document.querySelector('.ad-form');
-  var adFormFieldset = adForm.querySelectorAll('fieldset');
+  var adFormFieldsets = adForm.querySelectorAll('fieldset');
   var capacity = document.querySelector('#capacity');
   var title = document.querySelector('#title');
   var price = document.querySelector('#price');
@@ -44,17 +44,17 @@
     }
   };
 
-  for (var i = 0; i < adFormFieldset.length; i++) {
-    adFormFieldset[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldset
+  for (var i = 0; i < adFormFieldsets.length; i++) {
+    adFormFieldsets[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldsets
   }
 
   var activateAdForm = function () {
     adForm.classList.remove('ad-form--disabled');
   };
 
-  var activateAdFormFieldset = function () {
-    for (var j = 0; j < adFormFieldset.length; j++) {
-      adFormFieldset[j].classList.remove('disabled');
+  var activateAdFormFieldsets = function () {
+    for (var j = 0; j < adFormFieldsets.length; j++) {
+      adFormFieldsets[j].classList.remove('disabled');
     }
   };
 
@@ -137,8 +137,8 @@
   var onFormSubmitClick = function () {
     window.map.deactivate();
     adForm.classList.add('ad-form--disabled');
-    for (var j = 0; j < adFormFieldset.length; j++) {
-      adFormFieldset[j].classList.add('disabled');
+    for (var j = 0; j < adFormFieldsets.length; j++) {
+      adFormFieldsets[j].classList.add('disabled');
     }
     window.map.mapFiltersSelectDisabled();
     Array.from(document.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
@@ -146,6 +146,7 @@
     });
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
+    setAddress(window.map.getMainAddress());
     mainBlock.insertAdjacentElement('afterbegin', success);
     success.addEventListener('click', function () {
       success.remove();
@@ -183,7 +184,7 @@
 
   window.form = {
     setAddress: setAddress,
-    activateAdFormFieldset: activateAdFormFieldset,
+    activateAdFormFieldsets: activateAdFormFieldsets,
     activateAdForm: activateAdForm
   };
 })();

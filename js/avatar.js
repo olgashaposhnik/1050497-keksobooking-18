@@ -12,7 +12,7 @@
     var fileName = file.name.toLowerCase();
 
     var matches = FILE_TYPES.some(function (it) {
-     return fileName.endsWith(it);
+      return fileName.endsWith(it);
     });
 
     if (matches) {
@@ -24,13 +24,13 @@
 
       reader.readAsDataURL(file);
     }
-  }
+  };
 
   avatarFileChooser.addEventListener('change', function () {
-    loadImage (avatarFileChooser, avatarPreview);
+    loadImage(avatarFileChooser, avatarPreview);
   });
 
   photoFileChooser.addEventListener('change', function () {
-    loadImage (photoFileChooser, photoPreview);
+    loadImage(photoFileChooser, photoPreview);
   });
 })();
