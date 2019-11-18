@@ -122,7 +122,6 @@
   var filterByGuests = function (item) {
     return parseInt(guestsSelect.value, 10) === item.offer.guests || guestsSelect.value === 'any';
   };
-  // item.offer.guests === filterOptions.guests
 
   var filterByFeatures = function (item) {
     return getCheckedInputValues().every(function (adv) {
