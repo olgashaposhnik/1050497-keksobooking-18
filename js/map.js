@@ -51,7 +51,6 @@
   var onSuccessLoad = function (data) {
     advertisements = data;
     filteredData(data);
-    // createAdvertisements(data);
   };
 
   var onErrorLoad = function () {
@@ -66,7 +65,6 @@
       fragment.appendChild(advertisementItem);
     }
     advertisementList.appendChild(fragment);
-    // cleanAdvertisementList(); // очищаем карту от ранее созданных пинов
   };
 
   var getMapPinMainAddress = function () {

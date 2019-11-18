@@ -177,8 +177,8 @@
   });
 
   adForm.addEventListener('submit', function (evt) {
-    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
     evt.preventDefault();
+    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
   });
 
   window.form = {
