@@ -71,7 +71,6 @@
     } else {
       title.setCustomValidity('');
     }
-
   });
 
   title.addEventListener('input', function (evt) {
