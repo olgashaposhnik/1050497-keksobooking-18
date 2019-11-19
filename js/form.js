@@ -26,6 +26,18 @@
     '3': ['1', '2', '3'],
     '100': ['0']
   };
+  var TitleLength = {
+    MISS: 0,
+    MIN: 30,
+    MAX: 100
+  };
+  var priceRange = {
+    BUNGALO: 0,
+    FLAT: 1000,
+    HOUSE: 5000,
+    PALACE: 10000,
+    MAX: 100000
+  };
 
   var setAddress = function (data) {
     adress.value = data;
@@ -36,9 +48,13 @@
   var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
     var key = roomNumber.value; // cледим за выбранным количеством комнат
     var activeOptions = capacityOptionsTrue[key]; // disabledOptions - value из capacity
-    for (var k = 0; k < capacity.options.length; k++) {
-      capacity.options[k].disabled = !activeOptions.includes(capacity.options[k].value);
-    }
+    console.log(capacity.options)
+    capacity.options.forEach(function (item) {
+      item.disabled = !activeOptions.includes(item.value);
+    });
+    // for (var k = 0; k < capacity.options.length; k++) {
+    //   capacity.options[k].disabled = !activeOptions.includes(capacity.options[k].value);
+    // }
     if (!activeOptions.includes(capacity.selectedOptions[0].value)) {
       capacity.value = capacityOptionsTrue[key][0];
     }
@@ -50,9 +66,6 @@
 
   var activateAdForm = function () {
     adForm.classList.remove('ad-form--disabled');
-  };
-
-  var activateAdFormFieldsets = function () {
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].classList.remove('disabled');
     }
@@ -75,11 +88,11 @@
 
   title.addEventListener('input', function (evt) {
     var target = evt.target;
-    if (target.value.length < 30) {
+    if (target.value.length < TitleLength.MIN) {
       target.setCustomValidity('Заголовок объявления должен состоять минимум из 30-ти символов');
-    } else if (target.value.length > 100) {
+    } else if (target.value.length > TitleLength.MAX) {
       target.setCustomValidity('Заголовок объявления не должен превышать 100 символов');
-    } else if (target.value.length === 0) {
+    } else if (target.value.length === TitleLength.MISS) {
       target.setCustomValidity('Обязательное поле');
     } else {
       target.setCustomValidity('');
@@ -96,9 +109,9 @@
 
   price.addEventListener('input', function (evt) {
     var target = evt.target;
-    if (target.value < 0) {
+    if (target.value < priceRange.BUNGALO) {
       target.setCustomValidity('Минимальная цена за ночь 0 рублей');
-    } else if (target.value > 1000000) {
+    } else if (target.value > priceRange.MAX) {
       target.setCustomValidity('Максимальная цена за ночь 1 000 000 рублей');
     } else {
       target.setCustomValidity('');
@@ -107,21 +120,21 @@
 
   var onTypeSelectChange = function () { // Устанавливаем соответствие цены типу жилья
     if (type.value === 'bungalo') {
-      price.setAttribute('min', '0');
-      price.setAttribute('placeholder', '0');
+      price.setAttribute('min', priceRange.BUNGALO);
+      price.setAttribute('placeholder', priceRange.BUNGALO);
     } else if (type.value === 'flat') {
-      price.setAttribute('min', '1000');
-      price.setAttribute('placeholder', '1000');
+      price.setAttribute('min', priceRange.FLAT);
+      price.setAttribute('placeholder', priceRange.FLAT);
     } else if (type.value === 'house') {
-      price.setAttribute('min', '5000');
-      price.setAttribute('placeholder', '5000');
+      price.setAttribute('min', priceRange.HOUSE);
+      price.setAttribute('placeholder', priceRange.HOUSE);
     } else {
-      price.setAttribute('min', '10000');
-      price.setAttribute('placeholder', '10000');
+      price.setAttribute('min', priceRange.PALACE);
+      price.setAttribute('placeholder', priceRange.PALACE);
     }
   };
 
-  var successMessageClose = function () {
+  var closeSuccessMessage = function () {
     if (success) {
       success.remove();
       document.removeEventListener('keydown', onEscDown);
@@ -130,7 +143,7 @@
 
   var onEscDown = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      successMessageClose();
+      closeSuccessMessage();
     }
   };
 
@@ -140,7 +153,7 @@
     for (var j = 0; j < adFormFieldsets.length; j++) {
       adFormFieldsets[j].classList.add('disabled');
     }
-    window.map.mapFiltersSelectDisabled();
+    window.map.disableFiltersSelect();
     Array.from(document.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
       item.remove();
     });
@@ -152,6 +165,7 @@
       success.remove();
     });
     document.addEventListener('keydown', onEscDown);
+    mapPinMain.addEventListener('click', window.map.onPinMainClick);
   };
 
   var onSubmitError = function () {
@@ -184,7 +198,6 @@
 
   window.form = {
     setAddress: setAddress,
-    activateAdFormFieldsets: activateAdFormFieldsets,
-    activateAdForm: activateAdForm
+    activate: activateAdForm
   };
 })();

@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var URL = {
+  var Url = {
     LOAD: 'https://js.dump.academy/keksobooking/data',
     UPLOAD: 'https://js.dump.academy/keksobooking'
   };
@@ -30,13 +30,13 @@
 
   var load = function (onSuccess, onError) {
     var xhr = getRequest(onSuccess, onError);
-    xhr.open('GET', URL.LOAD);
+    xhr.open('GET', Url.LOAD);
     xhr.send();
   };
 
   var upload = function (onSuccess, onError, data) {
     var xhr = getRequest(onSuccess, onError);
-    xhr.open('POST', URL.UPLOAD);
+    xhr.open('POST', Url.UPLOAD);
     xhr.send(data);
   };
 

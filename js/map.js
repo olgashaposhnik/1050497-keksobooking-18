@@ -43,7 +43,7 @@
     }
   };
 
-  var classRemove = function (element, className) {
+  var removeClass = function (element, className) {
     element.classList.remove(className);
   };
 
@@ -82,16 +82,17 @@
 
   var onMapPinMainClick = function () {
     // Удаляем у блока .map класс .map--faded
-    classRemove(map, 'map--faded');
-    window.form.activateAdForm();
+    removeClass(map, 'map--faded');
+    window.form.activate();
     for (var l = 0; l < mapFiltersSelects.length; l++) {
       mapFiltersSelects[l].removeAttribute('disabled');
     }
     window.form.setAddress(getMapPinMainAddress());
     window.backend.load(onSuccessLoad, onErrorLoad);
+    mapPinMain.removeEventListener('click', onMapPinMainClick);
   };
 
-  var mapFiltersSelectsDisabled = function () { // Делает неактивными поля формы на карте в неактивном режиме
+  var disableMapFiltersSelect = function () { // Делает неактивными поля формы на карте в неактивном режиме
     for (var m = 0; m < mapFiltersSelects.length; m++) {
       mapFiltersSelects[m].setAttribute('disabled', 'disabled');
     }
@@ -147,7 +148,7 @@
   });
 
   mapFilters.classList.add('disabled'); // Добавляем класс disabled полям mapFilters
-  mapFiltersSelectsDisabled();
+  disableMapFiltersSelect();
 
   mapPinMain.addEventListener('click', onMapPinMainClick);
 
@@ -216,9 +217,9 @@
 
   window.map = {
     getMainAddress: getMapPinMainAddress,
-    getAddress: getMapPinAddress,
     deactivate: deactivateMap,
-    mapFiltersSelectsDisabled: mapFiltersSelectsDisabled,
-    createAdvertisements: createAdvertisements
+    disableFiltersSelect: disableMapFiltersSelect,
+    createAdvertisements: createAdvertisements,
+    onPinMainClick: onMapPinMainClick
   };
 })();
