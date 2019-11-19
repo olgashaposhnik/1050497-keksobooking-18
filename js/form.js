@@ -131,22 +131,22 @@
     }
   };
 
-  var closeSuccessMessage = function () {
-    if (success) {
-      success.remove();
-      document.removeEventListener('keydown', onEscDown);
-    }
-  };
-
   var onEscDown = function (evt) {
     if (evt.keyCode === ESC_KEYCODE) {
-      closeSuccessMessage();
+      if (document.querySelector('.success')) {
+        removeMessage(document.querySelector('.success'));
+      }
+
+      if (document.querySelector('.error')) {
+        removeMessage(document.querySelector('.error'));
+      }
     }
   };
 
   var removeMessage = function (message) {
     message.remove();
     adForm.addEventListener('submit', preventSubmitDefault);
+    document.removeEventListener('keydown', onEscDown);
   };
 
   var removeSuccessMessage = function () {
@@ -169,6 +169,7 @@
     });
     mapPinMain.setAttribute('style', 'left: 570px; top: 375px;');
     adForm.reset();
+    onNumberSelectChange();
     setAddress(window.map.getMainAddress());
     mainBlock.insertAdjacentElement('afterbegin', success);
     success.addEventListener('click', removeSuccessMessage);
