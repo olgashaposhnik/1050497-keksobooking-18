@@ -48,8 +48,7 @@
   var onNumberSelectChange = function () { // Устанавливаем соответствие количества комнат количеству гостей
     var key = roomNumber.value; // cледим за выбранным количеством комнат
     var activeOptions = capacityOptionsTrue[key]; // disabledOptions - value из capacity
-    console.log(capacity.options)
-    capacity.options.forEach(function (item) {
+    Array.from(capacity.options).forEach(function (item) {
       item.disabled = !activeOptions.includes(item.value);
     });
     // for (var k = 0; k < capacity.options.length; k++) {
@@ -60,15 +59,15 @@
     }
   };
 
-  for (var i = 0; i < adFormFieldsets.length; i++) {
-    adFormFieldsets[i].classList.add('disabled'); // Добавляем класс disabled полям adFormFieldsets
-  }
+  Array.from(adFormFieldsets).forEach(function (item) { // Добавляем класс disabled полям adFormFieldsets
+    item.classList.add('disabled');
+  });
 
   var activateAdForm = function () {
     adForm.classList.remove('ad-form--disabled');
-    for (var j = 0; j < adFormFieldsets.length; j++) {
-      adFormFieldsets[j].classList.remove('disabled');
-    }
+    Array.from(adFormFieldsets).forEach(function (item) {
+      item.classList.remove('disabled');
+    });
   };
 
   roomNumber.addEventListener('change', onNumberSelectChange); // Устанавливаем соответствие количества комнат количеству гостей
@@ -147,12 +146,17 @@
     }
   };
 
+
+  var removeMessage = function (message) {
+    message.remove();
+  };
+
   var onFormSubmitClick = function () {
     window.map.deactivate();
     adForm.classList.add('ad-form--disabled');
-    for (var j = 0; j < adFormFieldsets.length; j++) {
-      adFormFieldsets[j].classList.add('disabled');
-    }
+    Array.from(adFormFieldsets).forEach(function (item) {
+      item.classList.add('disabled');
+    });
     window.map.disableFiltersSelect();
     Array.from(document.querySelectorAll('.map__pin:not(.map__pin--main)')).forEach(function (item) {
       item.remove();
@@ -161,22 +165,23 @@
     adForm.reset();
     setAddress(window.map.getMainAddress());
     mainBlock.insertAdjacentElement('afterbegin', success);
-    success.addEventListener('click', function () {
-      success.remove();
-    });
+    success.addEventListener('click', removeMessage(success));
     document.addEventListener('keydown', onEscDown);
     mapPinMain.addEventListener('click', window.map.onPinMainClick);
+    adForm.removeEventListener('submit', preventSubmitDefault);
+  };
+
+  var preventSubmitDefault = function (evt) {
+    evt.preventDefault();
+    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
+    adForm.removeEventListener('submit', preventSubmitDefault);
   };
 
   var onSubmitError = function () {
     var error = errorMessage.cloneNode(true);
     mainBlock.insertAdjacentElement('afterbegin', error);
-    errorClose.addEventListener('click', function () {
-      error.remove();
-    });
-    error.addEventListener('click', function () {
-      error.remove();
-    });
+    errorClose.addEventListener('click', removeMessage(error));
+    error.addEventListener('click', removeMessage(error));
     document.addEventListener('keydown', onEscDown);
   };
 
@@ -191,10 +196,7 @@
     timein.value = evt.target.value;
   });
 
-  adForm.addEventListener('submit', function (evt) {
-    evt.preventDefault();
-    window.backend.upload(onFormSubmitClick, onSubmitError, new FormData(adForm));
-  });
+  adForm.addEventListener('submit', preventSubmitDefault);
 
   window.form = {
     setAddress: setAddress,

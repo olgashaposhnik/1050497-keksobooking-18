@@ -84,18 +84,18 @@
     // Удаляем у блока .map класс .map--faded
     removeClass(map, 'map--faded');
     window.form.activate();
-    for (var l = 0; l < mapFiltersSelects.length; l++) {
-      mapFiltersSelects[l].removeAttribute('disabled');
-    }
+    Array.from(mapFiltersSelects).forEach(function (item) {
+      item.removeAttribute('disabled');
+    });
     window.form.setAddress(getMapPinMainAddress());
     window.backend.load(onSuccessLoad, onErrorLoad);
     mapPinMain.removeEventListener('click', onMapPinMainClick);
   };
 
   var disableMapFiltersSelect = function () { // Делает неактивными поля формы на карте в неактивном режиме
-    for (var m = 0; m < mapFiltersSelects.length; m++) {
-      mapFiltersSelects[m].setAttribute('disabled', 'disabled');
-    }
+    Array.from(mapFiltersSelects).forEach(function (item) {
+      item.setAttribute('disabled', 'disabled');
+    });
   };
 
   var cleanAdvertisementList = function () { // функция, которая очищает область от старых пинов
