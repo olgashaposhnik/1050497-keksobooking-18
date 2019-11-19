@@ -18,6 +18,7 @@
   var success = successMessage.cloneNode(true);
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
+  var error = errorMessage.cloneNode(true);
   var errorClose = errorTemplate.content.querySelector('.error__button');
   var mainBlock = document.querySelector('main');
   var capacityOptionsTrue = {
@@ -51,9 +52,6 @@
     Array.from(capacity.options).forEach(function (item) {
       item.disabled = !activeOptions.includes(item.value);
     });
-    // for (var k = 0; k < capacity.options.length; k++) {
-    //   capacity.options[k].disabled = !activeOptions.includes(capacity.options[k].value);
-    // }
     if (!activeOptions.includes(capacity.selectedOptions[0].value)) {
       capacity.value = capacityOptionsTrue[key][0];
     }
@@ -146,9 +144,17 @@
     }
   };
 
-
   var removeMessage = function (message) {
     message.remove();
+    adForm.addEventListener('submit', preventSubmitDefault);
+  };
+
+  var removeSuccessMessage = function () {
+    removeMessage(success);
+  };
+
+  var removeErrorMessage = function () {
+    removeMessage(error);
   };
 
   var onFormSubmitClick = function () {
@@ -165,7 +171,7 @@
     adForm.reset();
     setAddress(window.map.getMainAddress());
     mainBlock.insertAdjacentElement('afterbegin', success);
-    success.addEventListener('click', removeMessage(success));
+    success.addEventListener('click', removeSuccessMessage);
     document.addEventListener('keydown', onEscDown);
     mapPinMain.addEventListener('click', window.map.onPinMainClick);
     adForm.removeEventListener('submit', preventSubmitDefault);
@@ -178,10 +184,9 @@
   };
 
   var onSubmitError = function () {
-    var error = errorMessage.cloneNode(true);
     mainBlock.insertAdjacentElement('afterbegin', error);
-    errorClose.addEventListener('click', removeMessage(error));
-    error.addEventListener('click', removeMessage(error));
+    errorClose.addEventListener('click', removeErrorMessage);
+    error.addEventListener('click', removeErrorMessage);
     document.addEventListener('keydown', onEscDown);
   };
 

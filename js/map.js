@@ -10,7 +10,7 @@
   var mapPinMain = document.querySelector('.map__pin--main');
   var errorTemplate = document.querySelector('#error');
   var errorMessage = errorTemplate.content.querySelector('.error');
-  var mainBlock = errorTemplate.content.querySelector('.main');
+  var mainBlock = document.querySelector('main');
   var filters = document.querySelector('.map__filters');
   var typeSelect = filters.querySelector('#housing-type');
   var priceSelect = filters.querySelector('#housing-price');
@@ -53,8 +53,8 @@
   };
 
   var onErrorLoad = function () {
-    var Error = errorMessage.cloneNode(true);
-    mainBlock.insertAdjacentElement('afterbegin', Error);
+    var error = errorMessage.cloneNode(true);
+    mainBlock.insertAdjacentElement('afterbegin', error);
   };
 
   var createAdvertisements = function (items) {

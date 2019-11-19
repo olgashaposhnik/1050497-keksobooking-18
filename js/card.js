@@ -32,10 +32,14 @@
   };
 
   var closePopup = function () {
+    var activePin = document.querySelector('.map__pin.active');
     var popup = document.querySelector('.map__card.popup');
     if (popup) {
       popup.remove();
       document.removeEventListener('keydown', onEscDown);
+    }
+    if (activePin) {
+      activePin.classList.remove('active');
     }
   };
 

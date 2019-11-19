@@ -10,6 +10,10 @@
   var mapFiltersContainer = document.querySelector('.map__filters-container');
 
   var onButtonPinClick = function (evt) {
+    if (evt.currentTarget.classList.contains('active')) {
+      return;
+    }
+    evt.currentTarget.classList.add('active');
     var optionsObject = evt.currentTarget._options;
     var advertisementCard = window.card.create(optionsObject);
     mapFiltersContainer.insertAdjacentElement('beforebegin', advertisementCard);
