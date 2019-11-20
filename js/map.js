@@ -219,7 +219,6 @@
     getMainAddress: getMapPinMainAddress,
     deactivate: deactivateMap,
     disableFiltersSelect: disableMapFiltersSelect,
-    createAdvertisements: createAdvertisements,
     onPinMainClick: onMapPinMainClick
   };
 })();
